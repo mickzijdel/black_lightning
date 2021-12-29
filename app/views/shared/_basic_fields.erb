@@ -1,7 +1,16 @@
 <% fields.each do |label_value_pair| %>
   <% label, value = label_value_pair %>
   
+  <% # TODO: What about doing a 'Not Specified" if nil instead? %>
+  <%# value = 'Not Specified' unless value.present? %>
+
   <% next if value.nil? %>
+
+  <% # Check peersupport (ask Mick) for a way to incorporate localisation. %>
+
+  <% if [true, false].include?(value) %>
+    <% value = bool_text(value) %>
+  <% end %>
 
   <p>
     <b><%= label.is_a?(Symbol) ? label.to_s.titleize : label %>:</b>

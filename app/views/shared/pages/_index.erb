@@ -1,20 +1,20 @@
 <% show_new_button = true if show_new_button.nil? %>
 <% include_edit_button = true if include_edit_button.nil? %>
-<% # Set to any negative number if you do not want a link to view the instance to be included. %>
-<% index_of_view = 0 if index_of_view.nil? %>
 
 <% headers << '' if can?(:edit, resource_class) && include_edit_button %>
 
 <% field_sets.each_with_index do |fields, i| %>
-  <% # Turn one of the fields into a show link. %>
-  <% if index_of_view > 0 %>
-    <% fields[index_of_view] = get_link(fields[index_of_view], :show) %>
-  <% end %>
-
   <% # Add an edit link to the end if the current user can edit the current instance.  %>
   <% # Assumes the first item is the instance.%>
   <% fields << get_link(fields[0], :edit) if can?(:edit, fields[0]) && include_edit_button %>
+
+    <% fields[0] = get_link(fields[0], :show) %>
 <% end %>
+
+<h1><%= @title %></h1>
+<p>
+  <%= display_block("#{resource_class.to_s.titleize} Description", false) %>
+</p>
 
 <%= will_paginate(resources) %>
 
