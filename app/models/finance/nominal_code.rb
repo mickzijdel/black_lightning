@@ -15,9 +15,13 @@
 #++
 class Finance::NominalCode < ApplicationRecord
   validates :code, :name, :description, :active, presence: true
-  validates :code, uniqueness: true, numericality: { only_integer: true, greater_than: 0 }, length: { is: 6}
+  validates :code, uniqueness: true, numericality: { only_integer: true, greater_than: 0 }, length: { is: 6 }
 
   attribute :active, :boolean, default: true
 
   default_scope { where(active: true) }
+
+  def label
+    return "#{code} - #{name}"
+  end
 end
