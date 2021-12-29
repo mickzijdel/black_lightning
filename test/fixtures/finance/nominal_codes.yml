@@ -1,0 +1,13 @@
+sundry:
+  id: 1
+  code: 359000
+  name: "Sundry Expenditure"
+  description: "The catch-all for Bedlam expenses. Fiona Winters wants to move away from it."
+  active: true
+
+inactive:
+  id: 2
+  code: 900800
+  name: "Inactive Code"
+  description: "This is just for testing. Make sure the default excludes it."
+  active: false
