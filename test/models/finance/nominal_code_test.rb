@@ -58,6 +58,6 @@ class Finance::NominalCodeTest < ActiveSupport::TestCase
   end
 
   test 'label' do
-    assert_equal '359000 - Sundry Expenditure', finance_nominal_codes(:sundry).label
+    assert_equal '439999 - Sundry Expenditure', finance_nominal_codes(:sundry).label
   end
 end

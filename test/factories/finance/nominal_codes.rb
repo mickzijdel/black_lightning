@@ -15,8 +15,8 @@
 #++
 FactoryBot.define do
   factory :nominal_code, class: 'Finance::NominalCode' do
-    code        { generate(:random_string) }
-    name        { generate(:random_string) }
+    code        { Faker::Number.number(digits: 6) }
+    name        { generate(:random_name) }
     hint        { generate(:random_text)   }
     description { generate(:random_text)   }
     active      { [true, false].sample      }

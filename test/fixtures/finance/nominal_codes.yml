@@ -1,6 +1,6 @@
 sundry:
   id: 1
-  code: 359000
+  code: 439999
   name: "Sundry Expenditure"
   description: "The catch-all for Bedlam expenses. Fiona Winters wants to move away from it."
   active: true
@@ -11,3 +11,10 @@ inactive:
   name: "Inactive Code"
   description: "This is just for testing. Make sure the default excludes it."
   active: false
+
+income:
+  id: 3
+  code: 359000
+  name: "Other Income"
+  description: "Generic Income Nominal Code"
+  active: true

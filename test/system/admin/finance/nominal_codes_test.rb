@@ -11,7 +11,7 @@ class Admin::Finance::NominalCodesTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Nominal Codes"
 
     # Assert the item in the table appears.
-    assert_text "359000 - Sundry Expenditure"
+    assert_text "439999 - Sundry Expenditure"
   end
 
   test "creating a Nominal code" do
@@ -37,7 +37,7 @@ class Admin::Finance::NominalCodesTest < ApplicationSystemTestCase
     fill_in "Name", with: @finance_nominal_code.name
     click_on "Update Nominal code"
 
-    assert_text "The Nominal Code '359000 - Sundry Expenditure' was successfully updated."
+    assert_text "The Nominal Code '439999 - Sundry Expenditure' was successfully updated."
   end
 
   test "destroying a Nominal code" do
@@ -46,10 +46,10 @@ class Admin::Finance::NominalCodesTest < ApplicationSystemTestCase
       click_on 'Destroy', match: :first
     end
 
-    assert_text "The Nominal Code \"359000 - Sundry Expenditure\" has been successfully destroyed."
+    assert_text "The Nominal Code \"439999 - Sundry Expenditure\" has been successfully destroyed."
 
     visit admin_finance_nominal_codes_url
 
-    refute_text '359000 - Sundry Expenditure'
+    refute_text '439999 - Sundry Expenditure'
   end
 end
