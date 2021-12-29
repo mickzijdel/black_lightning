@@ -172,6 +172,10 @@
                   <% if current_user.has_role?('Committee') %>
                     <li><%= link_to 'Committee', admin_committee_path %></li>
                   <% end %>
+
+                  <% if can? :index, Finance::NominalCode %>
+                    <li><%= link_to 'Nominal Codes', admin_finance_nominal_codes_path %></li>
+                  <% end %>
                 <% end%>
               </ul>
             </div>

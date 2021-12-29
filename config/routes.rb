@@ -239,6 +239,10 @@ ChaosRails::Application.routes.draw do
       get 'new', to: redirect('/complaints/new')
     end
 
+    namespace :finance do
+      resources :nominal_codes
+    end
+
     get '/reports/', to: 'reports#index', as: 'reports'
     namespace 'reports' do
       %w(roles members newsletter_subscribers staffing).each do |action|

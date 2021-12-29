@@ -1,0 +1,16 @@
+<h1><%= @title %></h1>
+
+<% fields = { 
+  code: @nominal_code.code,
+  name: @nominal_code.name,
+  active: @nominal_code.active
+} %>
+
+<%= render 'shared/basic_fields', fields: fields %>
+
+<p>
+  <h3>Description</h3>
+  <%= render_markdown(@nominal_code.description) %>
+</p>
+
+<%= render '/shared/show_actions', object: @nominal_code %>
