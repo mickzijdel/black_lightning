@@ -35,6 +35,11 @@ class NameHelperTest < ActionView::TestCase
     assert_equal staffing.show_title, get_object_name(staffing)
   end
 
+  test 'get_object_name for object with a label' do
+    nominal_code = finance_nominal_codes(:sundry)
+    assert_equal nominal_code.label, get_object_name(nominal_code)
+  end
+
   test 'get_object_name with reached default' do
     maintenance_debt = FactoryBot.create(:maintenance_debt)
     assert_equal 'Finbar the Viking', get_object_name(maintenance_debt, 'Finbar the Viking')
