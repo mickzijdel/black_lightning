@@ -1,9 +1,9 @@
 require "application_integration_test"
-<%- url_base ='admin_' + plural_table_name 
+<%- url_base = 'admin_' + plural_table_name %>
 <% module_namespacing do -%>
-TODO: This must include the admin thingy.
+
 <% controller_name = controller_class_name + 'ControllerTest' %>
-<% controller_name = 'Admin::' + controller_class_name unless controller_class_name.starts_with?('Admin::) %>
+<% controller_name = 'Admin::' + controller_class_name unless controller_name.starts_with?('Admin::') %>
 
 class <%= controller_name %> < ApplicationIntegrationTest
   <%- if mountable_engine? -%>
@@ -25,7 +25,7 @@ class <%= controller_name %> < ApplicationIntegrationTest
   end
 
   test "should get new" do
-    get new_<%= url_base %>_url
+    get new_admin_<%= url_base %>_url
     assert_response :success
   end
 
@@ -34,15 +34,15 @@ class <%= controller_name %> < ApplicationIntegrationTest
       post <%= url_base %>_url, params: @params
     end
 
-    assert_redirected_to <%= show_helper("#{class_name}.last") %>
+    assert_redirected_to admin_<%= show_helper %>
   end
 
   test "should not create <%= singular_table_name %> when invalid" do
-    assert_not_difference("<%= class_name %>.count") do
+    assert_no_difference("<%= class_name %>.count") do
       post <%= url_base %>_url, params: @params
     end
 
-    assert_redirected_to <%= show_helper("#{class_name}.last") %>
+    assert_redirected_to admin_<%= show_helper %>
   end
 
   test "should show <%= singular_table_name %>" do
@@ -57,7 +57,7 @@ class <%= controller_name %> < ApplicationIntegrationTest
 
   test "should update <%= singular_table_name %>" do
     patch <%= show_helper %>, params: @params
-    assert_redirected_to <%= show_helper %>
+    assert_redirected_to admin_<%= show_helper %>
   end
 
     test "should not update <%= singular_table_name %> when invalid" do

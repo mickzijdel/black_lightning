@@ -1,5 +1,6 @@
 require "application_system_test_case"
-<%- url_base ='admin_'+ plural_table_name 
+<%- url_base ='admin_'+ plural_table_name  %>
+
 <% module_namespacing do -%>
 class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
   setup do

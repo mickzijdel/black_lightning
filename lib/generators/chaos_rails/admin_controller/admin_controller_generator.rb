@@ -1,6 +1,9 @@
 class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
   include Rails::Generators::ResourceHelpers
 
+
+  # TODO: The name in the views is still wrong. Should not include namespaces.
+
   source_root File.expand_path('../templates', __FILE__)
 
   argument :attributes, type: :array, default: [], banner: 'field:type field:type'
@@ -14,7 +17,7 @@ class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
     namespace = regular_class_path
 
     unless namespace.first == 'admin'
-      namespace = namespace.insert(0, 'admin')
+      namespace.insert(0, 'admin')
     end
 
     route "resources :#{file_name.pluralize}", namespace: namespace
@@ -23,8 +26,6 @@ class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
   hook_for :template_engine, as: :admin_controller do |template_engine|
     invoke template_engine
   end
-
-  hook_for :test_framework, as: :scaffold
 
   private
 
