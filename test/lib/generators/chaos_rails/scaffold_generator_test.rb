@@ -8,7 +8,7 @@ class ChaosRails::ScaffoldGeneratorTest < Rails::Generators::TestCase
 
   test 'generator runs without errors' do
     assert_nothing_raised do
-      run_generator ['Test::Nonsense']
+      run_generator ['Test::Scaffold', ['name:string']]
     end
   end
 end

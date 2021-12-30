@@ -2,9 +2,10 @@
 
 <%% fields = { 
 <%- attributes.each do |attribute| -%>
-  <%= attribute.name %>: <%= "#{singular_table_name}.#{attribute.name}," %>
+  <%= attribute.name %>: <%= "#{resource_name}.#{attribute.name}," %>
 <%- end -%>
 }
+
 <%%= render 'shared/basic_fields', fields: fields %>
 
-<%%= render '/shared/show_actions', object: @<%= singular_table_name %> %>
+<%%= render '/shared/show_actions', object: @<%= resource_name %> %>

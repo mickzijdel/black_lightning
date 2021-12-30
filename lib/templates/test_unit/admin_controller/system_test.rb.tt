@@ -1,6 +1,6 @@
 require "application_system_test_case"
 <%- url_base ='admin_'+ plural_table_name  %>
-
+<%- human_resource_name = resource_name.humanize %>
 <% module_namespacing do -%>
 class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
   setup do
@@ -10,14 +10,14 @@ class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
 
   test "visiting the index" do
     visit <%= url_base %>_url
-    assert_selector "h1", text: "<%= human_name.pluralize %>"
+    assert_selector "h1", text: "<%= human_resource_name.pluralize %>"
 
     assert_text "REPLACE THIS WITH THE NAME OF A FIXTURE ITEM"
   end
 
-  test "should create <%= human_name %>" do
+  test "should create <%= human_resource_name %>" do
     visit <%= url_base %>_url
-    click_on "New <%= human_name %>"
+    click_on "New <%= human_resource_name %>"
 
     <%- attributes_hash.each do |attr, value| -%>
     <%- if boolean?(attr) -%>
@@ -26,14 +26,14 @@ class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
     fill_in "<%= attr.humanize %>", with: <%= value %>
     <%- end -%>
     <%- end -%>
-    click_on "Create <%= human_name %>"
+    click_on "Create <%= human_resource_name %>"
 
-    assert_text 'The <%= human_name %> was successfully created'
+    assert_text 'The <%= human_resource_name %> was successfully created'
   end
 
-  test "should update <%= human_name %>" do
+  test "should update <%= human_resource_name %>" do
     visit <%= url_base %>_url(@<%= singular_table_name %>)
-    click_on "Edit this <%= human_name.downcase %>", match: :prefer_exact
+    click_on "Edit this <%= human_resource_name.downcase %>", match: :prefer_exact
 
     <%- attributes_hash.each do |attr, value| -%>
     <%- if boolean?(attr) -%>
@@ -42,16 +42,16 @@ class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
     fill_in "<%= attr.humanize %>", with: <%= value %>
     <%- end -%>
     <%- end -%>
-    click_on "Update <%= human_name %>"
+    click_on "Update <%= human_resource_name %>"
 
-    assert_text "The <%= human_name %> was successfully updated."
+    assert_text "The <%= human_resource_name %> was successfully updated."
   end
 
-  test "should destroy <%= human_name %>" do
+  test "should destroy <%= human_resource_name %>" do
     visit <%= url_base %>_url(@<%= singular_table_name %>)
-    click_on "Destroy this <%= human_name.downcase %>", match: :first
+    click_on "Destroy this <%= human_resource_name.downcase %>", match: :first
 
-    assert_text "The <%= human_name %> has been successfully destroyed."
+    assert_text "The <%= human_resource_name %> has been successfully destroyed."
   end
 end
 <% end -%>

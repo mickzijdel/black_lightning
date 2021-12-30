@@ -8,7 +8,7 @@ class ChaosRails::AdminControllerGeneratorTest < Rails::Generators::TestCase
 
   test "generator runs without errors" do
     assert_nothing_raised do
-      run_generator ['Admin::StaffingJob']
+      run_generator ['Admin::StaffingJob', ['name:string']]
     end
   end
 end

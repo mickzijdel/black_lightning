@@ -2,11 +2,13 @@
 
 require "rails/generators/erb"
 require "rails/generators/resource_helpers"
+require 'generators/chaos_rails/resource_helpers'
 
 module Erb # :nodoc:
   module Generators # :nodoc:
     class AdminControllerGenerator < Base # :nodoc:
       include Rails::Generators::ResourceHelpers
+      include ChaosRails::ResourceHelpers
 
       source_root File.expand_path('templates', __dir__)
 

@@ -1,8 +1,8 @@
+require 'generators/chaos_rails/resource_helpers'
+
 class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
   include Rails::Generators::ResourceHelpers
-
-
-  # TODO: The name in the views is still wrong. Should not include namespaces.
+  include ChaosRails::ResourceHelpers
 
   source_root File.expand_path('../templates', __FILE__)
 
@@ -10,7 +10,7 @@ class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
 
   def create_controller_files
     template_file = 'admin_controller.rb'
-    template template_file, File.join('app/admin/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
+    template template_file, File.join('app/controllers/admin', controller_class_path, "#{controller_file_name}_controller.rb")
   end
 
   def add_resource_route
@@ -26,6 +26,8 @@ class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
   hook_for :template_engine, as: :admin_controller do |template_engine|
     invoke template_engine
   end
+
+  hook_for :test_framework, as: :admin_controller
 
   private
 
