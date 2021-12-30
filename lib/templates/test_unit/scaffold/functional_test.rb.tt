@@ -1,0 +1,76 @@
+require "application_integration_test"
+<%- url_base ='admin_' + plural_table_name 
+<% module_namespacing do -%>
+TODO: This must include the admin thingy.
+<% controller_name = controller_class_name + 'ControllerTest' %>
+<% controller_name = 'Admin::' + controller_class_name unless controller_class_name.starts_with?('Admin::) %>
+
+class <%= controller_name %> < ApplicationIntegrationTest
+  <%- if mountable_engine? -%>
+  include Engine.routes.url_helpers
+
+  <%- end -%>
+  setup do
+    @<%= singular_table_name %> = <%= fixture_name %>(:one)
+
+    login_as users(:admin)
+
+    @params = { <%= "#{singular_table_name}: { #{attributes_string} }" %> }
+  end
+
+  test "should get index" do
+    get <%= url_base %>_url
+    assert_response :success
+    assert_not_nil assigns(:<%= singular_table_name %>)
+  end
+
+  test "should get new" do
+    get new_<%= url_base %>_url
+    assert_response :success
+  end
+
+  test "should create <%= singular_table_name %>" do
+    assert_difference("<%= class_name %>.count") do
+      post <%= url_base %>_url, params: @params
+    end
+
+    assert_redirected_to <%= show_helper("#{class_name}.last") %>
+  end
+
+  test "should not create <%= singular_table_name %> when invalid" do
+    assert_not_difference("<%= class_name %>.count") do
+      post <%= url_base %>_url, params: @params
+    end
+
+    assert_redirected_to <%= show_helper("#{class_name}.last") %>
+  end
+
+  test "should show <%= singular_table_name %>" do
+    get <%= show_helper %>
+    assert_response :success
+  end
+
+  test "should get edit" do
+    get <%= edit_helper %>
+    assert_response :success
+  end
+
+  test "should update <%= singular_table_name %>" do
+    patch <%= show_helper %>, params: @params
+    assert_redirected_to <%= show_helper %>
+  end
+
+    test "should not update <%= singular_table_name %> when invalid" do
+    patch <%= show_helper %>, params: @params
+    assert_response :unprocessable_entity
+  end
+
+  test "should destroy <%= singular_table_name %>" do
+    assert_difference("<%= class_name %>.count", -1) do
+      delete <%= show_helper %>
+    end
+
+    assert_redirected_to <%= url_base %>_url
+  end
+end
+<% end -%>
