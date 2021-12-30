@@ -2,7 +2,7 @@ Description:
     Explain the generator
 
 Example:
-    bin/rails generate fixtures_generator Thing
+    bin/rails generate fixtures Thing
 
     This will create:
         what/will/it/create
