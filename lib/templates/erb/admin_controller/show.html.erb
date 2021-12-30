@@ -1,0 +1,10 @@
+<h1><%%= @title %></h1>
+
+<%% fields = { 
+<%- attributes.each do |attribute| -%>
+  <%= attribute.name %>: <%= "#{singular_table_name}.#{attribute.name}," %>
+<%- end -%>
+}
+<%%= render 'shared/basic_fields', fields: fields %>
+
+<%%= render '/shared/show_actions', object: @<%= singular_table_name %> %>

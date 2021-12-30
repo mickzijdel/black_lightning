@@ -1,0 +1,11 @@
+<%% headers = ['View'] + <%= attributes.map(&:name).to_s.gsub('"', "'") %> %>
+
+<%% field_sets = @<%= plural_table_name %>.map { |<%= singular_table_name %>| [<%= singular_table_name %>,  
+<%- attributes.each do |attribute| -%>
+  <%= "#{singular_table_name}.#{attribute.name}," %>
+<%- end -%>
+] }%>
+
+<%#= attributes.map{|attribute| "#{singular_table_name}.#{attribute.name}" }.to_s.sub('"', '') %>  
+
+<%%= render 'shared/pages/index', resource_class: <%= class_name %>, resources: @<%= plural_table_name %>, headers: headers, field_sets: field_sets %>
