@@ -10,14 +10,18 @@ class ChaosRails::AdminControllerGenerator < Rails::Generators::NamedBase
     template template_file, File.join('app/admin/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
   end
 
-  hook_for :template_engine, as: :admin_controller do |template_engine|
-    # TODO: Right views
-    invoke template_engine
+  def add_resource_route
+    namespace = regular_class_path
+
+    unless namespace.first == 'admin'
+      namespace = namespace.insert(0, 'admin')
+    end
+
+    route "resources :#{file_name.pluralize}", namespace: namespace
   end
 
-  hook_for :resource_route, required: true do |route|
-    # TODO: Add the admin route. How?
-    invoke route
+  hook_for :template_engine, as: :admin_controller do |template_engine|
+    invoke template_engine
   end
 
   hook_for :test_framework, as: :scaffold
