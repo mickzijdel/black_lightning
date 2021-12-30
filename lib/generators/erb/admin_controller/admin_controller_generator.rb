@@ -8,6 +8,8 @@ module Erb # :nodoc:
     class AdminControllerGenerator < Base # :nodoc:
       include Rails::Generators::ResourceHelpers
 
+      source_root File.expand_path('templates', __dir__)
+
       argument :attributes, type: :array, default: [], banner: 'field:type field:type'
 
       def create_root_folder
