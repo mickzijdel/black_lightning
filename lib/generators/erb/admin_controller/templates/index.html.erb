@@ -1,4 +1,4 @@
-<%% headers = ['View'] + <%= attributes.map(&:name).to_s.gsub('"', "'") %> %>
+<%% headers = ['View'] + <%= attributes.map{ |attribute| attribute.name.humanize }.to_s.gsub('"', "'") %> %>
 
 <%% field_sets = @<%= resource_name.pluralize %>.map { |<%= resource_name %>| [<%= resource_name %>,  
 <%- attributes.each do |attribute| -%>

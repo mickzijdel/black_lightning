@@ -7,6 +7,8 @@ class TestUnit::Generators::AdminControllerGenerator < TestUnit::Generators::Sca
   # Creating a new generator is also necessary so resource_name from ResourceHelpers is accessible.
   include ChaosRails::ResourceHelpers
 
+  source_root File.expand_path('../templates', __FILE__)
+
   private
 
   def class_path

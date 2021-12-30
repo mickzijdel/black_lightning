@@ -4,7 +4,7 @@ require "application_system_test_case"
 <% module_namespacing do -%>
 class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
   setup do
-    @<%= singular_table_name %> = <%= fixture_name %>(:one)
+    @<%= singular_table_name %> = <%= fixture_name.gsub('admin_', '') %>(:one)
     login_as users(:admin)
   end
 

@@ -1,5 +1,6 @@
-require "application_integration_test"
+require 'application_integration_test'
 <%- index_url = plural_table_name + '_url' %>
+
 <%- module_namespacing do -%>
 <%- controller_name = controller_class_name + 'ControllerTest' %>
 <%- controller_name = 'Admin::' + controller_class_name unless controller_name.starts_with?('Admin::') %>
@@ -10,62 +11,62 @@ class <%= controller_name %> < ApplicationIntegrationTest
 
   <%- end -%>
   setup do
-    @<%= resource_name %> = <%= fixture_name %>(:one)
+    @<%= singular_table_name %> = <%= fixture_name.gsub('admin_', '') %>(:one)
 
     login_as users(:admin)
 
-    @params = { <%= "#{resource_name}: { #{attributes_string} }" %> }
+    @params = { <%= "#{singular_table_name}: {#{attributes_string } }" %> }
   end
 
-  test "should get index" do
+  test 'should get index' do
     get <%= index_url %>
     assert_response :success
-    assert_not_nil assigns(:<%= resource_name %>)
+    assert_not_nil assigns(:<%= resource_name.pluralize %>)
   end
 
-  test "should get new" do
-    get new_admin_<%= index_url %>
+  test 'should get new' do
+    get new_<%= index_url %>
     assert_response :success
   end
 
-  test "should create <%= resource_name %>" do
-    assert_difference("<%= class_name %>.count") do
+  test 'should create <%= resource_name %>' do
+    assert_difference('<%= controller_class_name %>.count') do
       post <%= index_url %>, params: @params
     end
 
-    assert_redirected_to <%= show_helper %>
+    assert_redirected_to <%= show_helper.gsub("@#{singular_table_name}", "assigns{:#{resource_name}") %>
   end
 
-  test "should not create <%= resource_name %> when invalid" do
-    assert_no_difference("<%= class_name %>.count") do
+  test 'should not create <%= resource_name %> when invalid' do
+    assert_no_difference('<%= controller_class_name %>.count') do
       post <%= index_url %>, params: @params
     end
 
-    assert_redirected_to <%= show_helper %>
+    assert_response :unprocessable_entity
   end
 
-  test "should show <%= resource_name %>" do
+  test 'should show <%= resource_name %>' do
     get <%= show_helper %>
     assert_response :success
   end
 
-  test "should get edit" do
+  test 'should get edit' do
     get <%= edit_helper %>
     assert_response :success
   end
 
-  test "should update <%= resource_name %>" do
+  test 'should update <%= resource_name %>' do
     patch <%= show_helper %>, params: @params
     assert_redirected_to <%= show_helper %>
   end
 
-  test "should not update <%= resource_name %> when invalid" do
+  test 'should not update <%= resource_name %> when invalid' do
     patch <%= show_helper %>, params: @params
     assert_response :unprocessable_entity
   end
 
-  test "should destroy <%= resource_name %>" do
-    assert_difference("<%= class_name %>.count", -1) do
+  test 'should destroy <%= resource_name %>' do
+    assert_difference('<%= controller_class_name %>.count', -1) do
       delete <%= show_helper %>
     end
 

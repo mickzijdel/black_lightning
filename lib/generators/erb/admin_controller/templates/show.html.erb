@@ -2,9 +2,9 @@
 
 <%% fields = { 
 <%- attributes.each do |attribute| -%>
-  <%= attribute.name %>: <%= "#{resource_name}.#{attribute.name}," %>
+  <%= "#{attribute.name}: @#{resource_name}.#{attribute.name}," %>
 <%- end -%>
-}
+} %>
 
 <%%= render 'shared/basic_fields', fields: fields %>
 

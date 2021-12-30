@@ -31,9 +31,11 @@ module ChaosRails
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
+    # TODO: Upgrade to 6.1
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.eager_load_paths << "#{config.root}/lib"
+    Rails.autoloaders.main.ignore(config.root.join('lib/generators'))
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
