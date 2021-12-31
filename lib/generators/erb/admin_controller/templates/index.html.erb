@@ -6,6 +6,10 @@
 <%- end -%>
 ] }%>
 
-<%#= attributes.map{|attribute| "#{resource_name}.#{attribute.name}" }.to_s.sub('"', '') %>  
+<% search_fields = {
+  <%- attributes.each do |attribute| -%>
+    <%= "#{resource_name}_cont: { slug: 'defaults.'#{attribute.name} }," %>
+  <%- end -%>
+} %>
 
-<%%= render 'shared/pages/index', resource_class: <%= class_name %>, resources: @<%= resource_name.pluralize %>, headers: headers, field_sets: field_sets %>
+<%%= render 'shared/pages/index', resource_class: <%= class_name %>, resources: @<%= resource_name.pluralize %>, headers: headers, field_sets: field_sets, search_fields: search_fields %>

@@ -31,7 +31,7 @@ class Admin::Finance::NominalCodesControllerTest < ApplicationIntegrationTest
       post admin_finance_nominal_codes_url, params: @params
     end
 
-    assert_redirected_to admin_finance_nominal_code_url(Finance::NominalCode.last)
+    assert_redirected_to admin_finance_nominal_code_url(assigns(:nominal_code))
   end
 
   test 'should not create nominal code with same code' do

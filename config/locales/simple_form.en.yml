@@ -10,6 +10,16 @@ en:
       # html: '<abbr title="required">*</abbr>'
     error_notification:
       default_message: "Please review the problems below:"
+    labels:
+      defaults:
+        name: 'Name'
+        code: 'Code'
+        hint: 'Hint'
+        description: 'Description'
+        active: 'Is Active'
+        nominal_code: 'Nominal Code'
+        transaction_type: 'Transaction Type'
+
     # Labels and hints examples
     # labels:
     #   defaults:

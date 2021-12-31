@@ -11,15 +11,21 @@ class Admin::Finance::NominalCodesController < AdminController
 
   private
 
-    def resource_class
-      Finance::NominalCode
-    end
+  def resource_class
+    Finance::NominalCode
+  end
 
-    def permitted_params
-      [:code, :name, :description, :active]
-    end
+  def permitted_params
+    [:code, :name, :description, :active]
+  end
 
-    def order_params
-      :code
-    end
+  def order_params
+    :code
+  end
+
+  def base_index_database_query
+    return super.active if params[:show_non_active] != '1'
+
+    return super
+  end
 end

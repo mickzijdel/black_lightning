@@ -52,9 +52,9 @@ class Finance::NominalCodeTest < ActiveSupport::TestCase
     Finance::NominalCode.create([params, { code: '600000' }])
   end
 
-  test 'default_scope excludes inactive codes' do
-    assert_includes Finance::NominalCode.all, finance_nominal_codes(:sundry)
-    assert_not_includes Finance::NominalCode.all, finance_nominal_codes(:inactive)
+  test 'active scope excludes inactive codes' do
+    assert_includes Finance::NominalCode.active, finance_nominal_codes(:sundry)
+    assert_not_includes Finance::NominalCode.active, finance_nominal_codes(:inactive)
   end
 
   test 'label' do

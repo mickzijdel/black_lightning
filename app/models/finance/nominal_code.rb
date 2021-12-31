@@ -14,12 +14,18 @@
 # == Schema Information End
 #++
 class Finance::NominalCode < ApplicationRecord
-  validates :code, :name, :description, :active, presence: true
+  validates :code, :name, :description, presence: true
   validates :code, uniqueness: true, numericality: { only_integer: true, greater_than: 0 }, length: { is: 6 }
 
   attribute :active, :boolean, default: true
 
-  default_scope { where(active: true) }
+  has_many :transaction_categories, class_name: 'Finance::TransactionCategory'
+
+  default_scope { order(:code) }
+
+  def self.active
+    where(active: true)
+  end
 
   def label
     return "#{code} - #{name}"

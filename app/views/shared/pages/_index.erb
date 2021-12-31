@@ -1,5 +1,6 @@
 <% show_new_button = true if show_new_button.nil? %>
 <% include_edit_button = true if include_edit_button.nil? %>
+<% search_fields = nil if search_fields.nil? %>
 
 <% headers << '' if can?(:edit, resource_class) && include_edit_button %>
 
@@ -15,6 +16,10 @@
 <p>
   <%= display_block("#{resource_class.to_s.titleize} Description", false) %>
 </p>
+
+<% if search_fields.present? %>
+  <%= render 'shared/search_form', input_fields: search_fields %>
+<% end %>
 
 <%= will_paginate(resources) %>
 

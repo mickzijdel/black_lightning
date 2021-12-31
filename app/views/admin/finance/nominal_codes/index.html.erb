@@ -1,5 +1,12 @@
-<% headers = ['View', 'Code', 'Name', 'Is Active'] %>
+<% headers = ['View', :code, :name, :active] %>
 
 <% field_sets = @nominal_codes.map { |nominal_code| [nominal_code, nominal_code.code, nominal_code.name, bool_icon(nominal_code.active)] } %>
 
-<%= render 'shared/pages/index', resource_class: Finance::NominalCode, resources: @nominal_codes, headers: headers, field_sets: field_sets %>
+<% search_fields = {
+  name_cont:        { slug: 'defaults.name'                    },
+  code_cont:        { slug: 'defaults.code'                    },
+  description_cont: { slug: 'defaults.description'             },
+  show_non_active:  { type: :boolean, label: 'Show Non-Active' }
+} %>
+
+<%= render 'shared/pages/index', resource_class: Finance::NominalCode, resources: @nominal_codes, headers: headers, field_sets: field_sets, search_fields: search_fields %>

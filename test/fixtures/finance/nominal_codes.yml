@@ -1,19 +1,22 @@
 sundry:
-  id: 1
   code: 439999
   name: "Sundry Expenditure"
   description: "The catch-all for Bedlam expenses. Fiona Winters wants to move away from it."
   active: true
 
+set_and_tech:
+  code: 3331111
+  name: "Set and Tech Expenditure"
+  description: "Expenses for set and tech purposes."
+  active: true
+
 inactive:
-  id: 2
   code: 900800
   name: "Inactive Code"
   description: "This is just for testing. Make sure the default excludes it."
   active: false
 
 income:
-  id: 3
   code: 359000
   name: "Other Income"
   description: "Generic Income Nominal Code"
