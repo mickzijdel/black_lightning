@@ -176,6 +176,10 @@
                   <% if can? :index, Finance::NominalCode %>
                     <li><%= link_to 'Nominal Codes', admin_finance_nominal_codes_path %></li>
                   <% end %>
+
+                  <% if can? :index, Finance::TransactionCategory %>
+                    <li><%= link_to 'Transaction Categories', admin_finance_transaction_categories_path %></li>
+                  <% end %>
                 <% end%>
               </ul>
             </div>

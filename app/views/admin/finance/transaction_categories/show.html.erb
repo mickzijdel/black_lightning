@@ -1,0 +1,18 @@
+<h1><%= @title %></h1>
+
+<% fields = { 
+  name: @transaction_category.name,
+  hint: @transaction_category.hint,
+  nominal_code: get_link(@transaction_category.nominal_code, :show),
+  transaction_type: @transaction_category.transaction_type,
+  active: @transaction_category.active,
+} %>
+
+<%= render 'shared/basic_fields', fields: fields %>
+
+<p>
+  <h3>Description</h3>
+  <%= render_markdown(@transaction_category.description) %>
+</p>
+
+<%= render '/shared/show_actions', object: @transaction_category %>

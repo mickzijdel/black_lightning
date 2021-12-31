@@ -1,0 +1,7 @@
+tech:
+    name: 'Tech'
+    hint: 'For equipment hires, gels, etc'
+    description: "A longer description for tech"
+    nominal_code: set_and_tech
+    transaction_type: 0
+    active: true

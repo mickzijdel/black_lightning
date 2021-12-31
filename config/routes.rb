@@ -1,4 +1,5 @@
 require 'silencer'
+require 'constraints/existing_season'
 
 ChaosRails::Application.routes.draw do
   devise_for :users
@@ -241,6 +242,7 @@ ChaosRails::Application.routes.draw do
 
     namespace :finance do
       resources :nominal_codes
+      resources :transaction_categories
     end
 
     get '/reports/', to: 'reports#index', as: 'reports'

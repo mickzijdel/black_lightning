@@ -1,0 +1,19 @@
+<% headers =['Name', 'Hint', 'Nominal Code', 'Transaction Type', 'Active'] %>
+
+<% field_sets = @transaction_categories.map { |transaction_category| [
+  transaction_category,  
+  transaction_category.hint,
+  get_link(transaction_category.nominal_code, :show),
+  transaction_category.transaction_type,
+  bool_icon(transaction_category.active),
+] }%>
+
+<% search_fields = {
+  name_cont:            { slug: 'defaults.name'                    },
+  hint_cont:            { slug: 'defaults.hint'                    },
+  nominal_code_id_eq:   { type: :association, slug: 'defaults.nominal_code', collection: Finance::NominalCode.accessible_by(current_ability) },
+  transaction_type_eq:  { type: :select, slug: 'defaults.transaction_type', choices: Finance::TransactionCategory.transaction_type_options },
+  show_non_active:      { type: :boolean, label: 'Show Non-Active' }
+} %>
+
+<%= render 'shared/pages/index', resource_class: Finance::TransactionCategory, resources: @transaction_categories, headers: headers, field_sets: field_sets, search_fields: search_fields %>

@@ -1,0 +1,16 @@
+<%= simple_form_for([:admin, @transaction_category]) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+      <%= f.input :name %>
+      <%= f.input :hint %>
+      
+      <%= render "/shared/form/md_editor", f: f, field: :description, rows: 12, show_hint: true %>
+
+      <%= f.association :nominal_code, label_method: :label %>
+      <%= f.select :transaction_type, @transaction_category.transaction_type_options %>
+      <%= f.input :active %>
+  </div>
+
+  <%= render '/shared/form/form_actions', f: f %>
+<% end %>

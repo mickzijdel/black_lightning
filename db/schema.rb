@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_29_163654) do
+ActiveRecord::Schema.define(version: 2021_12_30_160158) do
 
   create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -331,6 +331,19 @@ ActiveRecord::Schema.define(version: 2021_12_29_163654) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "finance_transaction_categories", charset: "utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "hint", null: false
+    t.text "description"
+    t.bigint "nominal_code_id", null: false
+    t.integer "transaction_type", null: false
+    t.boolean "active", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["nominal_code_id"], name: "index_finance_transaction_categories_on_nominal_code_id"
+    t.index ["transaction_type"], name: "index_finance_transaction_categories_on_transaction_type"
+  end
+
   create_table "marketing_creatives_categories", charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "name_on_profile"
@@ -498,7 +511,7 @@ ActiveRecord::Schema.define(version: 2021_12_29_163654) do
     t.datetime "image_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "access_level", default: 2, null: false
+    t.integer "access_level", default: 1, null: false
     t.index ["gallery_id"], name: "index_pictures_on_gallery_id"
     t.index ["gallery_type"], name: "index_pictures_on_gallery_type"
   end
