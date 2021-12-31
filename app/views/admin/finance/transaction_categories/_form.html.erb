@@ -8,7 +8,10 @@
       <%= render "/shared/form/md_editor", f: f, field: :description, rows: 12, show_hint: true %>
 
       <%= f.association :nominal_code, label_method: :label %>
+
+      <%= f.label :transaction_type %>
       <%= f.select :transaction_type, @transaction_category.transaction_type_options %>
+
       <%= f.input :active %>
   </div>
 
