@@ -57,6 +57,8 @@ class Event < ApplicationRecord
 
   # Relationships #
 
+  has_one :budget, class_name: 'Finance::Budget'
+
   belongs_to :proposal, class_name: 'Admin::Proposals::Proposal', optional: true
 
   has_many :team_members, -> { includes(:user) }, class_name: '::TeamMember', as: :teamwork, dependent: :destroy

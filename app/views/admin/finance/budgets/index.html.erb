@@ -1,0 +1,19 @@
+<% headers = [:title, :event, :budget_category, :status] %>
+
+<% field_sets = @budgets.map { |budget| [
+  budget,  
+  budget.event.present? ? get_link(budget.event, :show) : 'Not Linked',
+  budget.budget_category,
+  budget.status,
+] }%>
+
+<% search_fields = {
+    title_cont:           { slug: 'defaults.title' },
+    notes_cont:           { slug: 'defaults.notes' },
+    users_full_name_cont: { slug: 'defaults.person_name'},
+    event_id_eq:          { type: :association, slug: 'defaults.event',       collection: Event.accessible_by(current_ability) },
+    budget_category_eq:   { type: :select, slug: 'defaults.budget_category',  choices: enum_options_for_select(Finance::Budget, 'budget_category') },
+    status_eq:            { type: :select, slug: 'defaults.status',           choices: enum_options_for_select(Finance::Budget, 'status') },
+} %>
+
+<%= render 'shared/pages/index', resource_class: Finance::Budget, resources: @budgets, headers: headers, field_sets: field_sets, search_fields: search_fields %>

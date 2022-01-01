@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_30_160158) do
+ActiveRecord::Schema.define(version: 2021_12_31_121411) do
 
   create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 2021_12_30_160158) do
     t.datetime "file_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "editable_block_id"
     t.string "item_type"
     t.bigint "item_id"
     t.integer "access_level", default: 1, null: false
@@ -320,6 +321,19 @@ ActiveRecord::Schema.define(version: 2021_12_30_160158) do
     t.index ["reported_by_id"], name: "index_fault_reports_on_reported_by_id"
     t.index ["severity"], name: "index_fault_reports_on_severity"
     t.index ["status"], name: "index_fault_reports_on_status"
+  end
+
+  create_table "finance_budgets", charset: "utf8", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "notes"
+    t.bigint "event_id"
+    t.integer "budget_category", null: false
+    t.integer "status", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["budget_category"], name: "index_finance_budgets_on_budget_category"
+    t.index ["event_id"], name: "index_finance_budgets_on_event_id"
+    t.index ["status"], name: "index_finance_budgets_on_status"
   end
 
   create_table "finance_nominal_codes", charset: "utf8", force: :cascade do |t|

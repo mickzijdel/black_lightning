@@ -1,0 +1,20 @@
+# == Schema Information
+#
+# Table name: finance_budgets
+#
+# *id*::              <tt>bigint, not null, primary key</tt>
+# *title*::           <tt>string(255), not null</tt>
+# *notes*::           <tt>text(65535)</tt>
+# *event_id*::        <tt>bigint</tt>
+# *budget_category*:: <tt>integer, not null</tt>
+# *status*::          <tt>integer, not null</tt>
+# *created_at*::      <tt>datetime, not null</tt>
+# *updated_at*::      <tt>datetime, not null</tt>
+#--
+# == Schema Information End
+#++
+front_of_house:
+    title: 'Front of House'
+    notes: 'Henlo'
+    budget_category: 1
+    status: 2

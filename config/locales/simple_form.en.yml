@@ -12,12 +12,18 @@ en:
       default_message: "Please review the problems below:"
     labels:
       defaults:
-        name: 'Name'
-        code: 'Code'
-        hint: 'Hint'
-        description: 'Description'
         active: 'Is Active'
+        budget_category: 'Budget Category'
+        code: 'Code'
+        description: 'Description'
+        event: 'Event'
+        hint: 'Hint'
+        name: 'Name'
         nominal_code: 'Nominal Code'
+        notes: 'Notes'
+        person_name: 'Person Name'
+        status: 'Status'
+        title: 'Title'
         transaction_type: 'Transaction Type'
 
     # Labels and hints examples

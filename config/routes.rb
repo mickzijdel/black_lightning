@@ -241,6 +241,7 @@ ChaosRails::Application.routes.draw do
     end
 
     namespace :finance do
+      resources :budgets
       resources :nominal_codes
       resources :transaction_categories
     end

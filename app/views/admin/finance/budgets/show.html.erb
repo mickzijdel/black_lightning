@@ -1,0 +1,20 @@
+<h1><%= @title %></h1>
+
+<% fields = { 
+  title: @budget.title,
+  event: @budget.event.present? ? get_link(@budget.event, :show) : 'Not Linked',
+  budget_category: @budget.budget_category,
+  status: @budget.status,
+} %>
+
+<%= render 'shared/basic_fields', fields: fields %>
+
+<p>
+  <h3>Notes</h3>
+  <%= render_markdown(@budget.notes) %>
+</p>
+
+<%= render '/shared/admin_show_team_members', team_members: @budget.team_members %>
+
+
+<%= render '/shared/show_actions', object: @budget %>
