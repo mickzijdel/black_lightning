@@ -1,7 +1,7 @@
 <%= simple_form_for([:admin, @transaction_category]) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
+<div class="form-inputs">
       <%= f.input :name %>
       <%= f.input :hint %>
       
@@ -10,7 +10,7 @@
       <%= f.association :nominal_code, label_method: :label %>
 
       <%= f.label :transaction_type %>
-      <%= f.select :transaction_type, @transaction_category.transaction_type_options %>
+      <%= f.select :transaction_type, enum_options_for_select(Finance::TransactionCategory, 'transaction_type', @transaction_category) %>
 
       <%= f.input :active %>
   </div>

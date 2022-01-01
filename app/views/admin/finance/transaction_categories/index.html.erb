@@ -12,7 +12,7 @@
   name_cont:            { slug: 'defaults.name'                    },
   hint_cont:            { slug: 'defaults.hint'                    },
   nominal_code_id_eq:   { type: :association, slug: 'defaults.nominal_code', collection: Finance::NominalCode.accessible_by(current_ability) },
-  transaction_type_eq:  { type: :select, slug: 'defaults.transaction_type', choices: Finance::TransactionCategory.transaction_type_options },
+  transaction_type_eq:  { type: :select, slug: 'defaults.transaction_type', choices: enum_options_for_select(Finance::TransactionCategory, 'transaction_type') },
   show_non_active:      { type: :boolean, label: 'Show Non-Active' }
 } %>
 
