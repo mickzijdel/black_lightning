@@ -1,5 +1,5 @@
-require "application_system_test_case"
-<%- url_base ='admin_'+ plural_table_name  %>
+require 'application_system_test_case'
+
 <%- human_resource_name = resource_name.humanize %>
 <% module_namespacing do -%>
 class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
@@ -9,15 +9,15 @@ class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
   end
 
   test "visiting the index" do
-    visit <%= url_base %>_url
-    assert_selector "h1", text: "<%= human_resource_name.pluralize %>"
+    visit <%= plural_table_name %>_url
+    assert_selector "h1", text: "<%= human_resource_name.pluralize.titleize %>"
 
     assert_text "REPLACE THIS WITH THE NAME OF A FIXTURE ITEM"
   end
 
   test "should create <%= human_resource_name %>" do
-    visit <%= url_base %>_url
-    click_on "New <%= human_resource_name %>"
+    visit <%= plural_table_name %>_url
+    click_on "New <%= human_resource_name.titleize %>"
 
     <%- attributes_hash.each do |attr, value| -%>
     <%- if boolean?(attr) -%>
@@ -32,8 +32,8 @@ class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
   end
 
   test "should update <%= human_resource_name %>" do
-    visit <%= url_base %>_url(@<%= singular_table_name %>)
-    click_on "Edit this <%= human_resource_name.downcase %>", match: :prefer_exact
+    visit <%= singular_table_name %>_url(@<%= singular_table_name %>)
+    click_on "Edit", match: :prefer_exact
 
     <%- attributes_hash.each do |attr, value| -%>
     <%- if boolean?(attr) -%>
@@ -48,9 +48,11 @@ class <%= class_name.pluralize %>Test < ApplicationSystemTestCase
   end
 
   test "should destroy <%= human_resource_name %>" do
-    visit <%= url_base %>_url(@<%= singular_table_name %>)
-    click_on "Destroy this <%= human_resource_name.downcase %>", match: :first
+    visit <%= singular_table_name %>_url(@<%= singular_table_name %>)
 
+    page.accept_confirm do
+      click_on 'Destroy', match: :first
+    end
     assert_text "The <%= human_resource_name %> has been successfully destroyed."
   end
 end

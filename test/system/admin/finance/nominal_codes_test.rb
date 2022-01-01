@@ -24,11 +24,11 @@ class Admin::Finance::NominalCodesTest < ApplicationSystemTestCase
     fill_in "Name", with: 'Create Test'
     click_on "Create Nominal code"
 
-    assert_text 'The Nominal Code \'321451 - Create Test\' was successfully created'
+    assert_text 'The Nominal Code "321451 - Create Test" was successfully created'
   end
 
   test "updating a Nominal code" do
-    visit admin_finance_nominal_codes_url
+    visit admin_finance_nominal_code_url(@finance_nominal_code)
     click_on "Edit", match: :prefer_exact
 
     un_check "Active" unless @finance_nominal_code.active
@@ -37,16 +37,17 @@ class Admin::Finance::NominalCodesTest < ApplicationSystemTestCase
     fill_in "Name", with: @finance_nominal_code.name
     click_on "Update Nominal code"
 
-    assert_text "The Nominal Code '439999 - Sundry Expenditure' was successfully updated."
+    assert_text 'The Nominal Code "439999 - Sundry Expenditure" was successfully updated.'
   end
 
   test "destroying a Nominal code" do
     visit admin_finance_nominal_code_url(finance_nominal_codes(:sundry))
+    
     page.accept_confirm do
       click_on 'Destroy', match: :first
     end
 
-    assert_text "The Nominal Code \"439999 - Sundry Expenditure\" has been successfully destroyed."
+    assert_text 'The Nominal Code "439999 - Sundry Expenditure" has been successfully destroyed.'
 
     visit admin_finance_nominal_codes_url
 

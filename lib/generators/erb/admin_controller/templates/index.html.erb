@@ -1,14 +1,15 @@
-<%% headers = ['View'] + <%= attributes.map{ |attribute| attribute.name.humanize }.to_s.gsub('"', "'") %> %>
+<%% headers = ['View', <%= attributes.map{ |attribute| ":#{attribute.name}" }.join(', ') %> %>
 
-<%% field_sets = @<%= resource_name.pluralize %>.map { |<%= resource_name %>| [<%= resource_name %>,  
+<%% field_sets = @<%= resource_name.pluralize %>.map { |<%= resource_name %>| [
+  <%= resource_name %>,  
 <%- attributes.each do |attribute| -%>
   <%= "#{resource_name}.#{attribute.name}," %>
 <%- end -%>
 ] }%>
 
-<% search_fields = {
+<%% search_fields = {
   <%- attributes.each do |attribute| -%>
-    <%= "#{resource_name}_cont: { slug: 'defaults.'#{attribute.name} }," %>
+    <%= "#{attribute.name}_cont: { slug: 'defaults.#{attribute.name}' }," %>
   <%- end -%>
 } %>
 

@@ -4,6 +4,7 @@ require 'application_integration_test'
 <%- module_namespacing do -%>
 <%- controller_name = controller_class_name + 'ControllerTest' %>
 <%- controller_name = 'Admin::' + controller_class_name unless controller_name.starts_with?('Admin::') %>
+<% class_name = controller_class_name.gsub('Admin::', '').singularize %>
 
 class <%= controller_name %> < ApplicationIntegrationTest
   <%- if mountable_engine? -%>
@@ -15,7 +16,10 @@ class <%= controller_name %> < ApplicationIntegrationTest
 
     login_as users(:admin)
 
-    @params = { <%= "#{singular_table_name}: {#{attributes_string } }" %> }
+    # You must update these to not directly copy the fixture but put in original data.
+    @params = { 
+      <%= "#{singular_table_name.gsub('admin_', '')}: {#{attributes_string } }" %> 
+    }
   end
 
   test 'should get index' do
@@ -25,20 +29,20 @@ class <%= controller_name %> < ApplicationIntegrationTest
   end
 
   test 'should get new' do
-    get new_<%= index_url %>
+    get <%= new_helper %>
     assert_response :success
   end
 
   test 'should create <%= resource_name %>' do
-    assert_difference('<%= controller_class_name %>.count') do
+    assert_difference('<%= class_name %>.count') do
       post <%= index_url %>, params: @params
     end
 
-    assert_redirected_to <%= show_helper.gsub("@#{singular_table_name}", "assigns{:#{resource_name}") %>
+    assert_redirected_to <%= show_helper.gsub("@#{singular_table_name}", "assigns(:#{resource_name})") %>
   end
 
   test 'should not create <%= resource_name %> when invalid' do
-    assert_no_difference('<%= controller_class_name %>.count') do
+    assert_no_difference('<%= class_name %>.count') do
       post <%= index_url %>, params: @params
     end
 
@@ -66,7 +70,7 @@ class <%= controller_name %> < ApplicationIntegrationTest
   end
 
   test 'should destroy <%= resource_name %>' do
-    assert_difference('<%= controller_class_name %>.count', -1) do
+    assert_difference('<%= class_name %>.count', -1) do
       delete <%= show_helper %>
     end
 
