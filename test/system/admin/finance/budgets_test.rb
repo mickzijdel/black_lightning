@@ -23,6 +23,9 @@ class Admin::Finance::BudgetsTest < ApplicationSystemTestCase
     fill_in "Title", with: 'IT'
     fill_in 'Notes', with: 'Yada Yada'
 
+    click_on 'Budget Lines'
+    fill_in 'finance_budget[budget_lines_attributes][0][name]', with: 'Test Budgetline'
+    fill_in 'finance_budget[budget_lines_attributes][0][allocated]', with: -100
     click_on "Create Budget"
 
     assert_text 'The Budget "IT" was successfully created'

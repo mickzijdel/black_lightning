@@ -1,0 +1,25 @@
+# == Schema Information
+#
+# Table name: finance_budget_lines
+#
+# *id*::               <tt>bigint, not null, primary key</tt>
+# *name*::             <tt>string(255), not null</tt>
+# *allocated_cents*::  <tt>integer, default(0), not null</tt>
+# *transaction_type*:: <tt>integer, not null</tt>
+# *budget_id*::        <tt>bigint, not null</tt>
+# *created_at*::       <tt>datetime, not null</tt>
+# *updated_at*::       <tt>datetime, not null</tt>
+#--
+# == Schema Information End
+#++
+income_budget_line:
+    name: 'Fundraiser'
+    allocated_cents: 1000
+    transaction_type: 1
+    budget: front_of_house
+
+expense_budget_line:
+    name: 'Ticket Tokens'
+    allocated_cents: 5005
+    transaction_type: 0
+    budget: front_of_house

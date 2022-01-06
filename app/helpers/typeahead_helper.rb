@@ -11,6 +11,10 @@ module TypeaheadHelper
     ]
   end
 
+  def budget_line_typeahead
+    return Finance::BudgetLine::DEFAULT_NAMES + ['Venue Hire', 'Ticket Income']
+  end
+
   # Works as a pass-by-reference
   # TODO: Having a filled id field, but an empty user name field should also be reason for error.
   def sanitize_user_typeahead_attributes!(attributes, add_error_to_flash)

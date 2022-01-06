@@ -15,11 +15,13 @@
 # == Schema Information End
 #++
 class Finance::TransactionCategory < ApplicationRecord
+  include TransactionType
+
   validates :name, :hint, :nominal_code, :transaction_type, :active, presence: true
   validates :name, uniqueness: true
 
+  # Define the transaction type enum by including.
   attribute :active, :boolean, default: true
-  enum transaction_type: { 'Expense' => 0, 'Income' => 1 }
 
   belongs_to :nominal_code, class_name: 'Finance::NominalCode'
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_31_121411) do
+ActiveRecord::Schema.define(version: 2022_01_01_170026) do
 
   create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -321,6 +321,17 @@ ActiveRecord::Schema.define(version: 2021_12_31_121411) do
     t.index ["reported_by_id"], name: "index_fault_reports_on_reported_by_id"
     t.index ["severity"], name: "index_fault_reports_on_severity"
     t.index ["status"], name: "index_fault_reports_on_status"
+  end
+
+  create_table "finance_budget_lines", charset: "utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "allocated_cents", default: 0, null: false
+    t.integer "transaction_type", null: false
+    t.bigint "budget_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["budget_id"], name: "index_finance_budget_lines_on_budget_id"
+    t.index ["transaction_type"], name: "index_finance_budget_lines_on_transaction_type"
   end
 
   create_table "finance_budgets", charset: "utf8", force: :cascade do |t|

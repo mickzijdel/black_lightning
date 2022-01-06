@@ -9,12 +9,13 @@
 
 <%= render 'shared/basic_fields', fields: fields %>
 
+<%= render '/admin/finance/budget_lines/show_partial', budget: @budget %>
+
 <p>
   <h3>Notes</h3>
   <%= render_markdown(@budget.notes) %>
 </p>
 
 <%= render '/shared/admin_show_team_members', team_members: @budget.team_members %>
-
 
 <%= render '/shared/show_actions', object: @budget %>

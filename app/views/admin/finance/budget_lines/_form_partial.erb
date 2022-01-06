@@ -1,0 +1,17 @@
+<div class="form-horizontal">
+  <h3>Budget Lines</h3>
+
+  <%= render layout: '/shared/collapsible_section', locals: { title: 'Budget Lines' } do %>
+    <%= display_block('Budget Lines Help', true) %>
+
+    <% if f.object.errors[:budget_lines].present? then %>
+      <p id="lines_errors" class="alert alert-error">
+        <%= f.error :budget_lines %>
+      </p>
+    <% end %>
+
+    <%= f.simple_fields_for :budget_lines %>
+   
+    <p><%= link_to_add f, :budget_lines %></p>
+  <% end %>
+</div>

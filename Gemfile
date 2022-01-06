@@ -35,6 +35,8 @@ gem 'caxlsx'
 gem 'prawn'
 gem 'rqrcode'
 
+gem 'money-rails'
+
 gem 'silencer'
 
 gem 'image_processing'

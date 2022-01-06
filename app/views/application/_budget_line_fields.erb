@@ -1,0 +1,11 @@
+<%= render layout: '/shared/form/fields_for_template', locals: { 
+        f: f,
+        div_class_additions: 'budget_line',
+        attributes: [:name, :allocated, :transaction_type, :budget_id]
+    } do %>
+    <%= f.input_field :name, placeholder: 'Name', autocomplete: 'off', data: { provide: "typeahead", source: budget_line_typeahead } %>
+    <%= f.input_field :allocated %>
+    <%= f.select :transaction_type, enum_options_for_select(Finance::BudgetLine, 'transaction_type', f.object.transaction_type) %>
+
+    <%= link_to_remove f %>
+<% end %>
