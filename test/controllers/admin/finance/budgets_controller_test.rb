@@ -30,7 +30,7 @@ class Admin::Finance::BudgetsControllerTest < ApplicationIntegrationTest
   end
 
   test 'should create budget' do
-
+    # If this fails, something may go wrong with setting up the budget lines with the 'add_default_budget_lines' method on a budget.
     assert_difference('Finance::Budget.count') do
       post admin_finance_budgets_url, params: @params
     end

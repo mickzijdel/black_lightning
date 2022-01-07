@@ -16,7 +16,7 @@
 class Finance::Budget < ApplicationRecord
   has_paper_trail
 
-  after_initialize :add_default_lines
+  after_initialize :add_default_budget_lines
 
   validates :title, :notes, :budget_category, :status, presence: true
   validates :title, uniqueness: true
@@ -57,11 +57,11 @@ class Finance::Budget < ApplicationRecord
   end
 
   # If the budget is first initialized, add the default lines such as rights, tech, set, etc.
-  def add_default_lines
+  def add_default_budget_lines
     return unless new_record? && budget_lines.empty?
 
     Finance::BudgetLine::DEFAULT_NAMES.each do |name|
-      budget_lines << Finance::BudgetLine.new(name: name)
+      budget_lines << Finance::BudgetLine.new(name: name, allocated: 0, transaction_type: 'Expense')
     end
   end
 
