@@ -184,6 +184,10 @@
                   <% if can? :index, Finance::Budget %>
                     <li><%= link_to 'Budgets', admin_finance_budgets_path %></li>
                   <% end %>
+                  
+                  <% if can? :index, Finance::BankInformation %>
+                    <li><%= link_to 'Bank Information', admin_finance_bank_informations_path %></li>
+                  <% end %>
                 <% end%>
               </ul>
             </div>

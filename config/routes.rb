@@ -244,6 +244,7 @@ ChaosRails::Application.routes.draw do
       resources :budgets
       resources :nominal_codes
       resources :transaction_categories
+      resources :bank_informations
     end
 
     get '/reports/', to: 'reports#index', as: 'reports'

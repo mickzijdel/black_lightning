@@ -1,0 +1,17 @@
+<% headers = [:account_holder_name, :sort_code, :account_number, :user] %>
+
+<% field_sets = @bank_informations.map { |bank_information| [
+  bank_information,  
+  bank_information.sort_code,
+  bank_information.account_number,
+  bank_information.user,
+] }%>
+
+<% search_fields = {
+    account_holder_name_cont: { slug: 'defaults.account_holder_name' },
+    sort_code_cont: { slug: 'defaults.sort_code' },
+    account_number_cont: { slug: 'defaults.account_number' },
+    user_full_name_cont: { slug: 'defaults.user' },
+} %>
+
+<%= render 'shared/pages/index', resource_class: Finance::BankInformation, resources: @bank_informations, headers: headers, field_sets: field_sets, search_fields: search_fields %>

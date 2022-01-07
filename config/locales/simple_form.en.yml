@@ -13,6 +13,8 @@ en:
     labels:
       defaults:
         active: 'Is Active'
+        account_holder_name: 'Account Holder Name'
+        account_number: 'Account Number'
         budget_category: 'Budget Category'
         code: 'Code'
         description: 'Description'
@@ -22,9 +24,11 @@ en:
         nominal_code: 'Nominal Code'
         notes: 'Notes'
         person_name: 'Person Name'
+        sort_code: 'Sort Code'
         status: 'Status'
         title: 'Title'
         transaction_type: 'Transaction Type'
+        user: 'User'
 
     # Labels and hints examples
     # labels:

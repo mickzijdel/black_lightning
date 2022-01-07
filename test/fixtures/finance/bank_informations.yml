@@ -1,0 +1,10 @@
+with_user:
+    account_holder_name: 'Finbar the Viking'
+    sort_code: '902127'
+    account_number: '9823529'
+
+with_user:
+    account_holder_name: 'Pine Apple'
+    sort_code: '800551'
+    account_number: '00813796'
+    user_id: 4

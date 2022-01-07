@@ -36,6 +36,7 @@ gem 'prawn'
 gem 'rqrcode'
 
 gem 'money-rails'
+gem 'uk_account_validator'
 
 gem 'silencer'
 

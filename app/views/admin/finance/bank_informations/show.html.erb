@@ -1,0 +1,12 @@
+<h1><%= @title %></h1>
+
+<% fields = { 
+  account_holder_name: @bank_information.account_holder_name,
+  sort_code: @bank_information.sort_code,
+  account_number: @bank_information.account_number,
+  user: user_link(@bank_information.user, true),
+} %>
+
+<%= render 'shared/basic_fields', fields: fields %>
+
+<%= render '/shared/show_actions', object: @bank_information %>

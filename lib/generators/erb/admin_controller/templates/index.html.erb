@@ -1,4 +1,4 @@
-<%% headers = ['View', <%= attributes.map{ |attribute| ":#{attribute.name}" }.join(', ') %> %>
+<%% headers = ['View', <%= attributes.map{ |attribute| ":#{attribute.name}" }.join(', ') %>] %>
 
 <%% field_sets = @<%= resource_name.pluralize %>.map { |<%= resource_name %>| [
   <%= resource_name %>,  
