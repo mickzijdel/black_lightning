@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_06_203109) do
+ActiveRecord::Schema.define(version: 2022_01_08_200640) do
 
   create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -356,6 +356,26 @@ ActiveRecord::Schema.define(version: 2022_01_06_203109) do
     t.index ["status"], name: "index_finance_budgets_on_status"
   end
 
+  create_table "finance_expenditure_requests", charset: "utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "submitter_notes"
+    t.text "business_manager_notes"
+    t.integer "amount_cents", default: 0, null: false
+    t.string "amount_currency", default: "GBP", null: false
+    t.bigint "budget_line_id", null: false
+    t.integer "user_id", null: false
+    t.bigint "bank_information_id"
+    t.integer "request_status"
+    t.integer "proof_status", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["bank_information_id"], name: "index_expenditure_requests_on_bank_information_id"
+    t.index ["budget_line_id"], name: "index_finance_expenditure_requests_on_budget_line_id"
+    t.index ["proof_status"], name: "index_finance_expenditure_requests_on_proof_status"
+    t.index ["request_status"], name: "index_finance_expenditure_requests_on_request_status"
+    t.index ["user_id"], name: "index_finance_expenditure_requests_on_user_id"
+  end
+
   create_table "finance_nominal_codes", charset: "utf8", force: :cascade do |t|
     t.string "code", null: false
     t.string "name", null: false
@@ -664,6 +684,8 @@ ActiveRecord::Schema.define(version: 2022_01_06_203109) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admin_debt_notifications", "users"
   add_foreign_key "events", "admin_proposals_proposals", column: "proposal_id"
+  add_foreign_key "finance_expenditure_requests", "finance_bank_informations", column: "bank_information_id"
+  add_foreign_key "finance_expenditure_requests", "finance_budget_lines", column: "budget_line_id"
   add_foreign_key "marketing_creatives_category_infos", "marketing_creatives_categories", column: "category_id"
   add_foreign_key "marketing_creatives_category_infos", "marketing_creatives_profiles", column: "profile_id"
   add_foreign_key "marketing_creatives_profiles", "users"

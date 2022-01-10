@@ -186,7 +186,11 @@
                   <% end %>
                   
                   <% if can? :index, Finance::BankInformation %>
-                    <li><%= link_to 'Bank Information', admin_finance_bank_informations_path %></li>
+                    <li><%= link_to 'Bank Informations', admin_finance_bank_informations_path %></li>
+                  <% end %>
+
+                  <% if can? :index, Finance::ExpenditureRequest %>
+                    <li><%= link_to 'Expenditure Requests', admin_finance_expenditure_requests_path %></li>
                   <% end %>
                 <% end%>
               </ul>

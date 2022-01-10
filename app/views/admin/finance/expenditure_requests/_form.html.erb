@@ -1,0 +1,17 @@
+<%= simple_form_for([:admin, @expenditure_request]) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+      <%= f.input :name %>
+      <%= f.input :amount_cents %>
+      <%= f.input :submitter_notes %>
+      <%= f.input :business_manager_notes %>
+      <%= f.association :budget_line %>
+      <%= f.association :user %>
+      <%= f.input :bank_information %>
+      <%= f.input :request_status %>
+      <%= f.input :proof_status %>
+  </div>
+
+  <%= render '/shared/form/form_actions', f: f %>
+<% end %>

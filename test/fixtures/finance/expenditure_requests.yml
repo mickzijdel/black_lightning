@@ -1,0 +1,41 @@
+# == Schema Information
+#
+# Table name: finance_expenditure_requests
+#
+# *id*::                     <tt>bigint, not null, primary key</tt>
+# *name*::                   <tt>string(255), not null</tt>
+# *submitter_notes*::        <tt>text(65535)</tt>
+# *business_manager_notes*:: <tt>text(65535)</tt>
+# *amount_cents*::           <tt>integer, default(0), not null</tt>
+# *amount_currency*::        <tt>string(255), default("GBP"), not null</tt>
+# *budget_line_id*::         <tt>bigint, not null</tt>
+# *user_id*::                <tt>integer, not null</tt>
+# *bank_information_id*::    <tt>bigint</tt>
+# *request_status*::         <tt>integer</tt>
+# *proof_status*::           <tt>integer, not null</tt>
+# *created_at*::             <tt>datetime, not null</tt>
+# *updated_at*::             <tt>datetime, not null</tt>
+#--
+# == Schema Information End
+#++
+unchecked_expenditure_request_with_bacs:
+    name: 'Receipts Printer Rolls'
+    amount_cents: -1756
+    submitter_notes: 'This is for new receipts printer rolls.'
+    business_manager_notes: 'Ah these payment machines.'
+    budget_line: expense_budget_line
+    user_id: 3
+    bank_information: with_user
+    request_status: 0
+    proof_status: 1
+
+unchecked_expenditure_request_with_invoice:
+    name: 'Rainbow Ticket Tokens'
+    amount_cents: -2323
+    submitter_notes: 'Represent Bedlam.'
+    business_manager_notes: 'Indeed'
+    budget_line: expense_budget_line
+    user_id: 4
+    bank_information: 
+    request_status: 2
+    proof_status: 1

@@ -1,0 +1,24 @@
+<% headers = [ :name, :amount_cents, :budget_line, :request_status, :proof_status] %>
+
+<% field_sets = @expenditure_requests.map { |expenditure_request| [
+  expenditure_request,  
+  expenditure_request.amount_cents,
+  get_link(expenditure_request.budget_line&.budget, :show, link_text: expenditure_request.budget_line&.name),
+  expenditure_request.request_status,
+  expenditure_request.proof_status,
+] }%>
+
+<% search_fields = {
+    name_cont:                                  { slug: 'defaults.name' },
+    amount_cents_cont:                          { slug: 'defaults.amount' },
+    submitter_notes_cont:                       { slug: 'defaults.submitter_notes' },
+    business_manager_notes_cont:                { slug: 'defaults.business_manager_notes' },
+    user_full_name_cont:                        { slug: 'defaults.user' },
+    bank_information_account_holder_name_cont:  { slug: 'defaults.bank_information' },
+
+    budget_id_eq:           { type: :association, slug: 'defaults.budget', collection: Finance::Budget.accessible_by(current_ability) },
+    request_status_eq:      { type: :select,      slug: 'defaults.request_status', choices: enum_options_for_select(Finance::ExpenditureRequest, 'request_status') },
+    proof_status_eq:        { type: :select,      slug: 'defaults.proof_status', choices: enum_options_for_select(Finance::ExpenditureRequest, 'proof_status') },
+} %>
+
+<%= render 'shared/pages/index', resource_class: Finance::ExpenditureRequest, resources: @expenditure_requests, headers: headers, field_sets: field_sets, search_fields: search_fields %>

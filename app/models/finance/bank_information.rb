@@ -8,6 +8,8 @@ class Finance::BankInformation < ApplicationRecord
 
   validate :modulus_check
 
+  has_many :expenditure_requests
+
   def label
     account_holder_name
   end
