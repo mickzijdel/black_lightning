@@ -7,7 +7,7 @@
       
       <%= render "/shared/form/md_editor", f: f, field: :description, rows: 12, show_hint: true %>
 
-      <%= f.association :nominal_code, label_method: :label %>
+      <%= f.association :nominal_code %>
 
       <%= f.label :transaction_type %>
       <%= f.select :transaction_type, enum_options_for_select(Finance::TransactionCategory, 'transaction_type', @transaction_category) %>
