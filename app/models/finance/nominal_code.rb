@@ -27,7 +27,7 @@ class Finance::NominalCode < ApplicationRecord
     where(active: true)
   end
 
-  def label
+  def to_label
     return "#{code} - #{name}"
   end
 end
