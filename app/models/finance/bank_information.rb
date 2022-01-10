@@ -26,7 +26,7 @@ class Finance::BankInformation < ApplicationRecord
 
   has_many :expenditure_requests
 
-  def label
+  def to_label
     account_holder_name
   end
 
