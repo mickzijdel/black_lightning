@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_08_200640) do
+ActiveRecord::Schema.define(version: 2022_01_11_192637) do
 
   create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -369,10 +369,13 @@ ActiveRecord::Schema.define(version: 2022_01_08_200640) do
     t.integer "proof_status", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.date "expense_date", null: false
+    t.bigint "transaction_category_id", null: false
     t.index ["bank_information_id"], name: "index_expenditure_requests_on_bank_information_id"
     t.index ["budget_line_id"], name: "index_finance_expenditure_requests_on_budget_line_id"
     t.index ["proof_status"], name: "index_finance_expenditure_requests_on_proof_status"
     t.index ["request_status"], name: "index_finance_expenditure_requests_on_request_status"
+    t.index ["transaction_category_id"], name: "index_expenditure_requests_on_transaction_category_id"
     t.index ["user_id"], name: "index_finance_expenditure_requests_on_user_id"
   end
 
@@ -686,6 +689,7 @@ ActiveRecord::Schema.define(version: 2022_01_08_200640) do
   add_foreign_key "events", "admin_proposals_proposals", column: "proposal_id"
   add_foreign_key "finance_expenditure_requests", "finance_bank_informations", column: "bank_information_id"
   add_foreign_key "finance_expenditure_requests", "finance_budget_lines", column: "budget_line_id"
+  add_foreign_key "finance_expenditure_requests", "finance_transaction_categories", column: "transaction_category_id"
   add_foreign_key "marketing_creatives_category_infos", "marketing_creatives_categories", column: "category_id"
   add_foreign_key "marketing_creatives_category_infos", "marketing_creatives_profiles", column: "profile_id"
   add_foreign_key "marketing_creatives_profiles", "users"

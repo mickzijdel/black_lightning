@@ -25,6 +25,10 @@ class Finance::TransactionCategory < ApplicationRecord
 
   belongs_to :nominal_code, class_name: 'Finance::NominalCode'
 
+  def to_label
+    "#{name} - #{hint}"
+  end
+
   def self.active
     where(active: true)
   end

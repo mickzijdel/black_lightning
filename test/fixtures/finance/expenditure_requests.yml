@@ -28,6 +28,8 @@ unchecked_expenditure_request_with_bacs:
     bank_information: with_user
     request_status: 0
     proof_status: 1
+    transaction_category: tech
+    expense_date: '2022-01-01'
 
 unchecked_expenditure_request_with_invoice:
     name: 'Rainbow Ticket Tokens'
@@ -39,3 +41,5 @@ unchecked_expenditure_request_with_invoice:
     bank_information: 
     request_status: 2
     proof_status: 1
+    transaction_category: tech
+    expense_date: '2022-01-01'

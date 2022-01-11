@@ -1,11 +1,11 @@
-<% headers = [ :name, :amount_cents, :budget_line, :request_status, :proof_status] %>
+<% headers = [ :name, :amount_cents, :budget, :request_status, :proof_status] %>
 
 <% field_sets = @expenditure_requests.map { |expenditure_request| [
   expenditure_request,  
-  expenditure_request.amount_cents,
-  get_link(expenditure_request.budget_line&.budget, :show, link_text: expenditure_request.budget_line&.name),
-  expenditure_request.request_status,
-  expenditure_request.proof_status,
+  humanized_money_with_symbol(expenditure_request.amount),
+  get_link(expenditure_request.budget_line&.budget, :show, link_text: expenditure_request.budget_line&.budget&.title),
+  expenditure_request.request_status.titleize,
+  expenditure_request.proof_status.titleize,
 ] }%>
 
 <% search_fields = {
