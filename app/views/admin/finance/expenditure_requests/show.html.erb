@@ -1,0 +1,32 @@
+<h1><%= @title %></h1>
+
+<% fields = { 
+  budget_line: get_link(@expenditure_request.budget_line.budget, :show, link_text: @expenditure_request.budget_line.name_with_budget),
+  transaction_category: get_link(@expenditure_request.transaction_category, :show),
+  expense_date: @expenditure_request.expense_date,
+  amount: humanized_money_with_symbol(@expenditure_request.amount),
+  user: user_link(@expenditure_request.user, false),
+  reimbursement_method: @expenditure_request.reimbursement_method.titleize,
+  bank_information: @expenditure_request.bank_information&.as_one_line,
+  request_status: @expenditure_request.request_status.titleize,
+  proof_status: @expenditure_request.proof_status.titleize,
+  proof: 'No Proof'
+} %>
+
+<% fields[:proof] = link_to(@expenditure_request.proof.blob.filename, rails_blob_path(@expenditure_request.proof, disposition: "attachment")) if @expenditure_request.proof.attached? %>
+
+<%= render 'shared/basic_fields', fields: fields %>
+
+<p>
+  <h3>Submitter Notes</h3>
+  <%= render_markdown(@expenditure_request.submitter_notes) %>
+</p>
+
+<% if can? :check, @expenditure_request %>
+  <p>
+    <h3>Business Manager Notes</h3>
+    <%= render_markdown(@expenditure_request.business_manager_notes) %>
+  </p>
+<% end %>
+
+<%= render '/shared/show_actions', object: @expenditure_request %>

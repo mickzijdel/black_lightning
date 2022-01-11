@@ -35,6 +35,10 @@ class Finance::BudgetLine < ApplicationRecord
   # List of names that are added to a budget when initialized.
   DEFAULT_NAMES = %w[Rights Admin Publicity Tech Set Costume Props Contingency].freeze
 
+  def name_with_budget
+    "#{budget.title.presence} - #{name}"
+  end
+
   def actual_cents
     if expense?
       return expenditure_requests.pluck(:amount_cents).sum

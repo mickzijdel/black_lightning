@@ -30,6 +30,10 @@ class Finance::BankInformation < ApplicationRecord
     account_holder_name
   end
 
+  def as_one_line
+    "#{account_holder_name} - #{sort_code} - #{account_number}"
+  end
+
   # Verify if the account_number and sort_code pass the modulus check.
   def modulus_check
     # If you get the following error:
