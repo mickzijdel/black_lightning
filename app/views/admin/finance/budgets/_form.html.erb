@@ -5,11 +5,9 @@
       <%= f.input :title %>
       <%= f.association :event %>
       
-      <%= f.label :budget_category %>
-      <%= f.select :budget_category, enum_options_for_select(Finance::Budget, 'budget_category', @budget) %>
+      <%= f.input :budget_category, collection: enum_collection(Finance::Budget, 'budget_category') %>
 
-      <%= f.label :status %>
-      <%= f.select :status, enum_options_for_select(Finance::Budget, 'status', @budget) %>
+      <%= f.input :status,          collection: enum_collection(Finance::Budget, 'status') %>
   </div>
 
   <%= render "/shared/form/md_editor", f: f, field: :notes, rows: 12, show_hint: true %>

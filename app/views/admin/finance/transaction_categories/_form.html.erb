@@ -9,8 +9,7 @@
 
       <%= f.association :nominal_code %>
 
-      <%= f.label :transaction_type %>
-      <%= f.select :transaction_type, enum_options_for_select(Finance::TransactionCategory, 'transaction_type', @transaction_category) %>
+      <%= f.input :transaction_type, collection: enum_collection(Finance::TransactionCategory, 'transaction_type') %>
 
       <%= f.input :active %>
   </div>
