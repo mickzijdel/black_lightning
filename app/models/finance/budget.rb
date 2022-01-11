@@ -57,6 +57,18 @@ class Finance::Budget < ApplicationRecord
     budget_lines.pluck(:allocated_cents).sum
   end
 
+  # TODO: Rename to expenditure
+  def total_actual_expenses_cents
+    Finance::ExpenditureRequest.where(budget_line: budget_lines.ids).pluck(:amount_cents).sum
+  end
+
+  def total_actual_income_cents
+    0
+  end
+
+  def total_actual_cents
+    total_actual_expenses_cents + total_actual_income_cents
+  end
   # If the budget is first initialized, add the default lines such as rights, tech, set, etc.
   def add_default_budget_lines
     return unless new_record? && budget_lines.empty?

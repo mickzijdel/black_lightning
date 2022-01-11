@@ -1,19 +1,19 @@
 <h3>Budget Lines</h3>
 
-<% headers = ['Name', 'Allocated'] %>
+<% headers = ['Name', 'Allocated', 'Actual'] %>
 
-<% field_sets = budget.budget_lines.map { |line| [line.name, humanized_money_with_symbol(line.allocated)] }%>
+<% field_sets = budget.budget_lines.map { |line| [line.name, humanized_money_with_symbol(line.allocated), humanized_money_with_symbol(line.actual)] }%>
 
 <% # Add the total rows. %>
 <% if budget.budget_lines.expense.any? %>
   <% insert_index = budget.budget_lines.pluck(:transaction_type).find_index('income').presence || budget.budget_lines.count %>
-  <% field_sets.insert(insert_index, ['<b>Total Expenses<b/>'.html_safe, "<b>#{humanized_money_with_symbol(budget.total_allocated_expenses)}</b>".html_safe]) %>
+  <% field_sets.insert(insert_index, bold(['Total Expenses', humanized_money_with_symbol(budget.total_allocated_expenses), humanized_money_with_symbol(budget.total_actual_expenses)])) %>
 <% end %>
 
 <% if budget.budget_lines.income.any? %>
-  <% field_sets << ['<b>Total Income<b/>'.html_safe, "<b>#{humanized_money_with_symbol(budget.total_allocated_income)}</b>".html_safe] %>
+  <% field_sets << bold(['Total Income', humanized_money_with_symbol(budget.total_allocated_income), humanized_money_with_symbol(budget.total_actual_income)]) %>
 <% end %>
 
-<% field_sets << ['<b>Total<b/>'.html_safe,"<b>#{humanized_money_with_symbol(budget.total_allocated)}</b>".html_safe] %>
+<% field_sets << bold(['Total', humanized_money_with_symbol(budget.total_allocated), humanized_money_with_symbol(budget.total_actual)]) %>
 
 <%= render 'shared/table', headers: headers, field_sets: field_sets %>

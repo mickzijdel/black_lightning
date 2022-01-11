@@ -25,12 +25,24 @@ class Finance::BudgetLine < ApplicationRecord
 
   belongs_to :budget, class_name: 'Finance::Budget'
 
+  has_many :expenditure_requests, class_name: 'Finance::ExpenditureRequest'
+
   monetize :allocated_cents
+  monetize :actual_cents
 
   default_scope -> { order(:transaction_type) }
 
   # List of names that are added to a budget when initialized.
   DEFAULT_NAMES = %w[Rights Admin Publicity Tech Set Costume Props Contingency].freeze
+
+  def actual_cents
+    if expense?
+      return expenditure_requests.pluck(:amount_cents).sum
+    elsif income?
+      # TODO
+      0
+    end
+  end
 
   # Checks that allocated_cents is 0 or bigger than 0 when income, and 0 or smaller than 0 when expenditure.
   def correct_sign
