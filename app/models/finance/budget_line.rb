@@ -34,9 +34,9 @@ class Finance::BudgetLine < ApplicationRecord
 
   # Checks that allocated_cents is 0 or bigger than 0 when income, and 0 or smaller than 0 when expenditure.
   def correct_sign
-    if transaction_type == 'Expense' && allocated_cents > 0
+    if transaction_type == 'expense' && allocated_cents > 0
       errors.add(:allocated, 'is a positive number despite being expenditure')
-    elsif transaction_type == 'Income' && allocated_cents < 0
+    elsif transaction_type == 'income' && allocated_cents < 0
       errors.add(:allocated, 'is a negative number despite being income')
     end
   end

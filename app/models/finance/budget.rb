@@ -45,11 +45,11 @@ class Finance::Budget < ApplicationRecord
   monetize :total_actual_cents
 
   def total_allocated_expenses_cents
-    budget_lines.Expense.pluck(:allocated_cents).sum
+    budget_lines.expense.pluck(:allocated_cents).sum
   end
 
   def total_allocated_income_cents
-    budget_lines.Income.pluck(:allocated_cents).sum
+    budget_lines.income.pluck(:allocated_cents).sum
   end
 
   def total_allocated_cents
@@ -61,7 +61,7 @@ class Finance::Budget < ApplicationRecord
     return unless new_record? && budget_lines.empty?
 
     Finance::BudgetLine::DEFAULT_NAMES.each do |name|
-      budget_lines << Finance::BudgetLine.new(name: name, allocated: 0, transaction_type: 'Expense')
+      budget_lines << Finance::BudgetLine.new(name: name, allocated: 0, transaction_type: 'expense')
     end
   end
 

@@ -20,7 +20,7 @@ FactoryBot.define do
     hint { generate(:random_text) }
     description { generate(:random_text) }
     association :nominal_code, factory: :finance_nominal_code
-    transaction_type { 'Income' }
+    transaction_type { 'income' }
     active { [true, false].sample }
   end
 end

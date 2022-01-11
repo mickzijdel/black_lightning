@@ -14,7 +14,7 @@ class Admin::Finance::TransactionCategoriesControllerTest < ApplicationIntegrati
         hint: 'For set and tool hire',
         name: 'Set',
         nominal_code_id: finance_nominal_codes(:set_and_tech).id,
-        transaction_type: 'Expense'
+        transaction_type: 'expense'
       }
     }
   end

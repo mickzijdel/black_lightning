@@ -5,12 +5,12 @@
 <% field_sets = budget.budget_lines.map { |line| [line.name, humanized_money_with_symbol(line.allocated)] }%>
 
 <% # Add the total rows. %>
-<% if budget.budget_lines.Expense.any? %>
-  <% insert_index = budget.budget_lines.pluck(:transaction_type).find_index('Income').presence || budget.budget_lines.count %>
+<% if budget.budget_lines.expense.any? %>
+  <% insert_index = budget.budget_lines.pluck(:transaction_type).find_index('income').presence || budget.budget_lines.count %>
   <% field_sets.insert(insert_index, ['<b>Total Expenses<b/>'.html_safe, "<b>#{humanized_money_with_symbol(budget.total_allocated_expenses)}</b>".html_safe]) %>
 <% end %>
 
-<% if budget.budget_lines.Income.any? %>
+<% if budget.budget_lines.income.any? %>
   <% field_sets << ['<b>Total Income<b/>'.html_safe, "<b>#{humanized_money_with_symbol(budget.total_allocated_income)}</b>".html_safe] %>
 <% end %>
 
