@@ -26,7 +26,7 @@ class Finance::ExpenditureRequest < ApplicationRecord
   after_create :update_status_after_create
   after_save :update_status_after_save
 
-  validates :name, :amount_cents, :request_status, :proof_status, :expense_date, presence: true
+  validates :name, :amount_cents, :request_status, :proof_status, :reimbursement_method, :expense_date, presence: true
   validates :name, format: ValidationHelper::filename_validation_regex
   validates :amount_cents, numericality: { only_integer: true, less_than: 0 }
   validates :name, uniqueness: { scope: :budget_line_id }
@@ -35,6 +35,7 @@ class Finance::ExpenditureRequest < ApplicationRecord
 
   enum request_status: { 'unchecked' => 0, 'has_issue' => 1, 'checked' => 2, 'sent_to_eusa' => 3 }, _prefix: :request
   enum proof_status: { 'not_submitted' => 0, 'submitted' => 1, 'has_issue' => 2, 'checked' => 3, 'sent_to_eusa' => 4 }, _prefix: :proof
+  enum reimbursement_method: { 'bacs' => 0, 'invoice' => 1 }
 
   belongs_to :budget_line, class_name: 'Finance::BudgetLine'
   belongs_to :user, optional: true
