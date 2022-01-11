@@ -243,7 +243,7 @@ ChaosRails::Application.routes.draw do
     namespace :finance do
       resources :bank_informations
       resources :budgets
-      resources :expenditure_requests, except: :new
+      resources :expenditure_requests
       resources :nominal_codes
       resources :transaction_categories
     end

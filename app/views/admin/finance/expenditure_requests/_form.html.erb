@@ -3,14 +3,33 @@
 
   <div class="form-inputs">
       <%= f.input :name %>
-      <%= f.input :amount_cents %>
-      <%= f.input :submitter_notes %>
-      <%= f.input :business_manager_notes %>
-      <%= f.association :budget_line %>
-      <%= f.association :user %>
-      <%= f.input :bank_information %>
-      <%= f.input :request_status %>
-      <%= f.input :proof_status %>
+      <%= f.association :budget_line, collection: @expenditure_request.budget.budget_lines.accessible_by(current_ability) %>
+      
+      TODO: Transaction category
+      <%= f.input :amount, hint: 'Must be negative.' %>
+      
+      <%= f.simple_fields_for :bank_information do |bank_information_form| %>
+        <div class="well">
+          <h3>Bank Details</h3>
+          <%= render 'bank_information_fields', f: bank_information_form %>
+        </div>
+      <% end %>
+
+      <%= render "/shared/form/md_editor", f: f, field: :submitter_notes, rows: 12, show_hint: true %>
+
+      <% if can? :check, @expenditure_request %>
+        <%= render "/shared/form/md_editor", f: f, field: :business_manager_notes, rows: 12, show_hint: true %>
+        
+        <%= render '/shared/form/user_field', f: f, hint: 'The person who submitted the Expenditure Request. Will default to the current user, which is you.' %>
+
+        <%= f.input :request_status,  collection: enum_collection(Finance::ExpenditureRequest, 'request_status'),  selected: @expenditure_request.request_status || 'checked' %>
+        
+        <%= f.input :proof_status,    collection: enum_collection(Finance::ExpenditureRequest, 'proof_status'),    selected: @expenditure_request.proof_status || 'checked' %>
+      
+        TODO: Invoice/bank info stuff. Leaving bank details blank
+
+        TODO: Proof
+      <% end %>
   </div>
 
   <%= render '/shared/form/form_actions', f: f %>

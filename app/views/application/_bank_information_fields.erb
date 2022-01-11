@@ -1,0 +1,5 @@
+<% # Does not use the template since these all display their own inputs. %>
+<%= f.input :account_holder_name %>
+<%= f.input :sort_code %>
+<%= f.input :account_number %>
+<%= render '/shared/form/user_field', f: f, hint: 'The user that the bank information belongs to. Can be left blank. This user will receive updates on expenditure requests with their bank information attached.' %>

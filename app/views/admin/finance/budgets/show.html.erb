@@ -18,4 +18,6 @@
 
 <%= render '/shared/admin_show_team_members', team_members: @budget.team_members %>
 
-<%= render '/shared/show_actions', object: @budget %>
+<%= render '/shared/show_actions', object: @budget do %>
+  <%= get_link Finance::ExpenditureRequest, :new_, http_method: :get, query_params: { budget_id: @budget.id } %> 
+<% end %>
