@@ -15,8 +15,9 @@
 
       authorize! :submit, @budget
 
+      # BUG: when you do not select a budget line, the form fails because the budget won't be present.
       @expenditure_request.budget = budget
-      @expenditure_request.bank_information = Finance::BankInformation.new
+      @expenditure_request.setup_bank_information
 
       super
     end
@@ -24,6 +25,8 @@
     # CREATE: /finance/expenditure_requests
     def create
       authorize! :submit, @budget
+
+      @expenditure_request.setup_bank_information
 
       if @expenditure_request.user.nil?
         @expenditure_request.user = current_user

@@ -23,12 +23,13 @@ class Finance::ExpenditureRequest < ApplicationRecord
 
   has_paper_trail
 
+  before_validation :parse_bank_information
   after_create :update_status_after_create
   after_save :update_status_after_save
 
   validates :name, :amount_cents, :request_status, :proof_status, :reimbursement_method, :expense_date, presence: true
   validates :name, format: ValidationHelper::filename_validation_regex
-  validates :amount_cents, numericality: { only_integer: true, less_than: 0 }
+  validates :amount, numericality: { less_than: 0 }
   validates :name, uniqueness: { scope: :budget_line_id }
 
   monetize :amount_cents
@@ -40,13 +41,25 @@ class Finance::ExpenditureRequest < ApplicationRecord
   belongs_to :budget_line, class_name: 'Finance::BudgetLine'
   belongs_to :user, optional: true
   belongs_to :transaction_category, class_name: 'Finance::TransactionCategory'
-  belongs_to :bank_information, class_name: 'Finance::BankInformation'
+  belongs_to :bank_information, class_name: 'Finance::BankInformation', optional: true
   # TODO: figure out how update_only works with creating.
   accepts_nested_attributes_for :bank_information, allow_destroy: true#, update_only: true
 
   has_one :budget, through: :budget_line, autosave: false
 
   has_one_attached :proof
+
+  def setup_bank_information
+    build_bank_information if self.bank_information.nil?
+  end
+
+  # Callbacks
+
+  def parse_bank_information
+    if invoice?
+      self.bank_information = nil
+    end
+  end
 
   def update_status_after_save
     if proof_status.nil? || proof_status == 'not_sbmitted'
@@ -57,7 +70,7 @@ class Finance::ExpenditureRequest < ApplicationRecord
       end
     end
 
-    if proof.attached? && proof.blob.saved_changes?
+    if proof.attached?
       # Standardise the filename for the proof so they are easily linked to the correct expenditure.
       proof.blob.update(filename: "#{expense_date} - #{budget_line&.budget&.title.presence || 'No Budget'} - #{name}.#{proof.filename.extension}")
     end

@@ -36,9 +36,11 @@ class Finance::BankInformation < ApplicationRecord
 
   # Verify if the account_number and sort_code pass the modulus check.
   def modulus_check
+    return if account_number.nil? || sort_code.nil?
+  
     # If you get the following error:
     # Wrapped undumpable exception for: TypeError: nil can't be coerced into Integer
-    # That is because one of the strings passed does not have 8 or 6 as length, and 
+    # That is because one of the strings passed does not have 8 or 6 as length, and
     # thus the accessing goes wrong.
     # Feel free to submit a pull request to the gem to make that error message clearer,
     # or add support for different-length account numbers

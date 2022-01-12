@@ -7,7 +7,7 @@
   amount: humanized_money_with_symbol(@expenditure_request.amount),
   user: user_link(@expenditure_request.user, false),
   reimbursement_method: @expenditure_request.reimbursement_method.titleize,
-  bank_information: @expenditure_request.bank_information&.as_one_line,
+  bank_information: @expenditure_request.bank_information&.as_one_line.presence || 'No Bank Information',
   request_status: @expenditure_request.request_status.titleize,
   proof_status: @expenditure_request.proof_status.titleize,
   proof: 'No Proof'

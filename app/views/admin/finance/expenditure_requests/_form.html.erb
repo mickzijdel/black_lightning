@@ -11,7 +11,7 @@
 
       <%= f.input :amount, hint: 'Must be negative.' %>
       
-      <%= f.input :reimbursement_method, hint: 'If you have an invoice, please check if it contains bank details. In this case, please set this to Bacs and make sure to attach the invoice as proof. If you specify Bacs, you must fill out the bank details, except for user, which is not required.', collection: enum_collection(Finance::ExpenditureRequest, 'reimbursement_method') %>
+      <%= f.input :reimbursement_method, hint: 'If you need to be reimbursed by bank transfer, please select Bacs. If you have an invoice, please check if it contains bank details. In this case, please set this to Bacs and make sure to attach the invoice as proof. If you specify Bacs, you must fill out the bank details, except for user, which is not required.', collection: enum_collection(Finance::ExpenditureRequest, 'reimbursement_method') %>
   
       <%= f.simple_fields_for :bank_information do |bank_information_form| %>
         <div class="well">
