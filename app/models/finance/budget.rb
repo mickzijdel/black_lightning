@@ -34,6 +34,8 @@ class Finance::Budget < ApplicationRecord
   accepts_nested_attributes_for :team_members, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :budget_lines, reject_if: :all_blank, allow_destroy: true
 
+  validates_associated :budget_lines
+
   def self.active
     # TODO: Define this later once draft budgets exist.
     all

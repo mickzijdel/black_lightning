@@ -17,9 +17,11 @@ class Finance::BudgetLine < ApplicationRecord
 
   has_paper_trail
 
-  validate :correct_sign
   validates :name, :allocated_cents, :transaction_type, presence: true
   validates :name, uniqueness: { scope: :budget_id }
+
+  validate :correct_sign
+  validate :allocated_not_below_actual
 
   # Define the transaction type enum by including.
 
@@ -54,6 +56,14 @@ class Finance::BudgetLine < ApplicationRecord
       errors.add(:allocated, 'is a positive number despite being expenditure')
     elsif transaction_type == 'income' && allocated_cents < 0
       errors.add(:allocated, 'is a negative number despite being income')
+    end
+  end
+
+  # Checks that for expenses, the allocated amount is more than the actual amount.
+  def allocated_not_below_actual
+    # Actual and allocated are negative, so we fail if actual is an even lower number than allocated.
+    if expense? && actual_cents < allocated_cents
+      errors.add(:allocated, "must be larger than the amount currently spend, which is #{actual}")
     end
   end
 end
