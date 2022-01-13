@@ -48,11 +48,36 @@ class Finance::ExpenditureRequest < ApplicationRecord
 
   has_one_attached :proof
 
-  # Returns budgets that have been checked or sent to EUSA
-  def self.approved
+  # Scopes
+
+  def self.requires_attention
+    p where(request_status: 'unchecked')
+    p where(proof_status: 'submitted')
+
+    where(request_status: 'unchecked').or(where(proof_status: 'submitted'))
+  end
+
+  def self.waiting_for_update
+    p self.where(request_status: ['has_issue'])
+    p self.where(proof_status: ['not_submitted', 'has_issue'])
+    self.where(request_status: ['has_issue']).or(self.where(proof_status: ['not_submitted', 'has_issue']))
+  end
+
+  def self.fully_approved
+    return self.request_approved.proof_approved
+  end
+
+  # Returns requests that have been checked or sent to EUSA
+  def self.request_approved
     where(request_status: ['checked', 'sent_to_eusa'])
   end
 
+  # Returns requests with proofs that have been checked or sent to EUSA
+  def self.proof_approved
+    where(proof_status: ['checked', 'sent_to_eusa'])
+  end
+
+  # Helper
   def setup_bank_information
     build_bank_information if self.bank_information.nil?
   end

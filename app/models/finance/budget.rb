@@ -66,7 +66,7 @@ class Finance::Budget < ApplicationRecord
 
   # TODO: Rename to expenditure
   def total_actual_expenses_cents
-    Finance::ExpenditureRequest.where(budget_line: budget_lines.ids).approved.pluck(:amount_cents).sum
+    Finance::ExpenditureRequest.where(budget_line: budget_lines.ids).request_approved.pluck(:amount_cents).sum
   end
 
   def total_actual_income_cents

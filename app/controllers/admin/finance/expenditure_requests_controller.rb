@@ -62,7 +62,17 @@ class Admin::Finance::ExpenditureRequestsController < AdminController
     return accepted_params
   end
 
-  def order_params
-    []
+  def order_args
+    ['name']
+  end
+
+  def base_index_database_query
+    if params[:show_all] == '1'
+      return super
+    elsif params[:show_waiting_for_update] == '1'
+      return super.requires_attention.or(super.waiting_for_update)
+    else
+      return super.requires_attention
+    end
   end
 end

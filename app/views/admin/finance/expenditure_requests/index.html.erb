@@ -19,6 +19,9 @@
     budget_id_eq:           { type: :association, slug: 'defaults.budget', collection: Finance::Budget.accessible_by(current_ability) },
     request_status_eq:      { type: :select,      slug: 'defaults.request_status', choices: enum_options_for_select(Finance::ExpenditureRequest, 'request_status') },
     proof_status_eq:        { type: :select,      slug: 'defaults.proof_status', choices: enum_options_for_select(Finance::ExpenditureRequest, 'proof_status') },
+
+    show_waiting_for_update:  { type: :boolean, label: 'Show Waiting For Update' },
+    show_all:                 { type: :boolean, label: 'Show All' },
 } %>
 
 <%= render 'shared/pages/index', resource_class: Finance::ExpenditureRequest, resources: @expenditure_requests, headers: headers, field_sets: field_sets, search_fields: search_fields, show_new_button: false %>
