@@ -24,7 +24,6 @@ class Finance::ExpenditureRequest < ApplicationRecord
   has_paper_trail
 
   before_validation :parse_bank_information
-  after_create :update_status_after_create
   after_save :update_status_after_save
 
   validates :name, :amount_cents, :request_status, :proof_status, :reimbursement_method, :expense_date, presence: true
@@ -34,7 +33,7 @@ class Finance::ExpenditureRequest < ApplicationRecord
 
   monetize :amount_cents
 
-  enum request_status: { 'unchecked' => 0, 'has_issue' => 1, 'checked' => 2, 'sent_to_eusa' => 3 }, _prefix: :request
+  enum request_status: { 'unchecked' => 0, 'has_issue' => 1, 'checked' => 2, 'sent_to_eusa' => 3 }, _prefix: :request, _default: 'unchecked'
   enum proof_status: { 'not_submitted' => 0, 'submitted' => 1, 'has_issue' => 2, 'checked' => 3, 'sent_to_eusa' => 4 }, _prefix: :proof
   enum reimbursement_method: { 'bacs' => 0, 'invoice' => 1 }
 
@@ -85,11 +84,5 @@ class Finance::ExpenditureRequest < ApplicationRecord
     end
 
     update_columns(proof_status: new_proof_status)
-  end
-
-  def update_status_after_create
-    if request_status.nil?
-      update(request_status: 'unchecked')
-    end
   end
 end
