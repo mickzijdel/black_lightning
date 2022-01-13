@@ -32,4 +32,30 @@ class Finance::BudgetLineTest < ActiveSupport::TestCase
       budget_line.save!
     end
   end
+
+  test 'cannot change to income with expense attached' do
+    budget_line = finance_budget_lines(:expense_budget_line)
+
+    assert_raise ActiveRecord::RecordInvalid do
+      budget_line.transaction_type = 'income'
+      budget_line.save!
+    end
+
+    assert_equal ['Transaction type is marked as income but has expenditure requests attached. Please change the type back to expense.'], budget_line.errors.full_messages
+  end
+
+  test 'cannot change to expense with income attached' do
+    assert false
+  end
+
+  test 'cannot change allocated to below actual' do
+    budget_line = finance_budget_lines(:expense_budget_line)
+
+    assert_raise ActiveRecord::RecordInvalid do
+      budget_line.allocated = -1
+      budget_line.save!
+    end
+
+    assert_equal ['Allocated must be larger than the amount currently spend, which is -23.23'], budget_line.errors.full_messages
+  end
 end

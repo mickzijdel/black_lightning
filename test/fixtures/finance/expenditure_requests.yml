@@ -30,6 +30,7 @@ unchecked_expenditure_request_with_bacs:
     proof_status: 1
     transaction_category: tech
     expense_date: '2022-01-01'
+    reimbursement_method: 0
 
 unchecked_expenditure_request_with_invoice:
     name: 'Rainbow Ticket Tokens'
@@ -38,8 +39,8 @@ unchecked_expenditure_request_with_invoice:
     business_manager_notes: 'Indeed'
     budget_line: expense_budget_line
     user_id: 4
-    bank_information: 
     request_status: 2
     proof_status: 1
     transaction_category: tech
     expense_date: '2022-01-01'
+    reimbursement_method: 1
