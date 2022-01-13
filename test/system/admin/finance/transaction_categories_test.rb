@@ -39,7 +39,7 @@ class Admin::Finance::TransactionCategoriesTest < ApplicationSystemTestCase
     fill_in "Hint", with: @admin_finance_transaction_category.hint
     fill_in "Name", with: @admin_finance_transaction_category.name
     select @admin_finance_transaction_category.nominal_code.to_label, from: 'Nominal Code'
-    select @admin_finance_transaction_category.transaction_type, from: 'Transaction Type'
+    select @admin_finance_transaction_category.transaction_type.titleize, from: 'Transaction Type'
     click_on "Update Transaction category"
 
     assert_text 'The Transaction Category "Tech" was successfully updated.'

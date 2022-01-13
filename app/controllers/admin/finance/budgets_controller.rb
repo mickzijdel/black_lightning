@@ -22,7 +22,7 @@ class Admin::Finance::BudgetsController < AdminController
     ]
   end
 
-  def order_params
-    [:title]
+  def order_args
+    ['title']
   end
 end

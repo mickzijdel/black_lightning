@@ -19,8 +19,8 @@ class Admin::Finance::NominalCodesController < AdminController
     [:code, :name, :description, :active]
   end
 
-  def order_params
-    :code
+  def order_args
+    ['code']
   end
 
   def base_index_database_query

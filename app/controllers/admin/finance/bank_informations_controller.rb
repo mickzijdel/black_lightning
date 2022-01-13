@@ -20,7 +20,7 @@ class Admin::Finance::BankInformationsController < AdminController
     [:account_holder_name, :sort_code, :account_number]
   end
 
-  def order_params
-    [:account_holder_name]
+  def order_args
+    ['account_holder_name']
   end
 end

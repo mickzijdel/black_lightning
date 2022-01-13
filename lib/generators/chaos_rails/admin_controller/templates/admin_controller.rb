@@ -25,7 +25,7 @@ class Admin::<%= controller_class_name %>Controller < AdminController
     [<%= permitted_params %>]
   end
 
-  def order_params
+  def order_args
     []
   end
 end

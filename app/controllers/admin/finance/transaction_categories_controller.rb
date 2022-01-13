@@ -19,8 +19,8 @@ class Admin::Finance::TransactionCategoriesController < AdminController
     [:name, :hint, :description, :nominal_code_id, :transaction_type, :active]
   end
 
-  def order_params
-    [:name]
+  def order_args
+    ['name']
   end
 
   def base_index_database_query
