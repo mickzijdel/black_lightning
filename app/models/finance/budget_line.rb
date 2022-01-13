@@ -49,13 +49,31 @@ class Finance::BudgetLine < ApplicationRecord
       0
     end
   end
+  
+  def requests_attached?
+    expenditure_requests.size.positive? || false # TODO: Has income
+  end
 
-  # Checks that allocated_cents is 0 or bigger than 0 when income, and 0 or smaller than 0 when expenditure.
+  private 
+
+  # Validations
+
   def correct_sign
-    if transaction_type == 'expense' && allocated_cents > 0
-      errors.add(:allocated, 'is a positive number despite being expenditure')
-    elsif transaction_type == 'income' && allocated_cents < 0
-      errors.add(:allocated, 'is a negative number despite being income')
+    # Checks that the sign stays appropriate when the budget line already has expenditure_requests or income attached.
+    # Return because the allocated error is irrelevant if the type is wrong.
+    if expense? && false # TODO: Has income
+      errors.add(:transaction_type, 'is marked as expense but has income requests attached. Please change the type back to income.')
+      return
+    elsif income? && expenditure_requests.size.positive?
+      errors.add(:transaction_type, 'is marked as income but has expenditure requests attached. Please change the type back to expense.')
+      return
+    end
+
+    # Checks that allocated_cents is 0 or bigger than 0 when income, and 0 or smaller than 0 when expenditure.
+    if expense? && allocated_cents.positive?
+      errors.add(:allocated, 'is a positive number despite being expenditure.')
+    elsif income? && allocated_cents.negative?
+      errors.add(:allocated, 'is a negative number despite being income.')
     end
   end
 

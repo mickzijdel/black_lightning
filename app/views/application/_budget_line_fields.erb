@@ -6,7 +6,6 @@
     <%= f.hint "Actual: #{f.object.actual}" %>
     <%= f.input_field :name, placeholder: 'Name', autocomplete: 'off', data: { provide: "typeahead", source: budget_line_typeahead } %>
     <%= f.input_field :allocated %>
-    <%= f.select :transaction_type, enum_options_for_select(Finance::BudgetLine, 'transaction_type', f.object.transaction_type) %>
-
+    <%= f.input_field :transaction_type, collection: enum_collection(Finance::BudgetLine, 'transaction_type'), disabled: f.object.requests_attached? %>
     <%= link_to_remove f %>
 <% end %>
