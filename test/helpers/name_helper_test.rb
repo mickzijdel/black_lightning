@@ -37,7 +37,7 @@ class NameHelperTest < ActionView::TestCase
 
   test 'get_object_name for object with a label' do
     nominal_code = finance_nominal_codes(:sundry)
-    assert_equal nominal_code.label, get_object_name(nominal_code)
+    assert_equal nominal_code.to_label, get_object_name(nominal_code)
   end
 
   test 'get_object_name with reached default' do

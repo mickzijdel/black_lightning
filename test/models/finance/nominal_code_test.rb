@@ -57,7 +57,7 @@ class Finance::NominalCodeTest < ActiveSupport::TestCase
     assert_not_includes Finance::NominalCode.active, finance_nominal_codes(:inactive)
   end
 
-  test 'label' do
-    assert_equal '439999 - Sundry Expenditure', finance_nominal_codes(:sundry).label
+  test 'to_label' do
+    assert_equal '439999 - Sundry Expenditure', finance_nominal_codes(:sundry).to_label
   end
 end
