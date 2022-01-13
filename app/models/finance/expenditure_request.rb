@@ -66,10 +66,16 @@ class Finance::ExpenditureRequest < ApplicationRecord
   end
 
   def update_status_after_save
+    # If the expenditure request has changed, set the status back to unchecked, unless the only changes are status updates.
+    if saved_changes.except(:request_status, :proof_status, :updated_at, :submitter_notes, :business_manager_notes).any?
+      update_columns(request_status: 0)
+    end
+
+    # Now look at the proof status.
     new_proof_status = Finance::ExpenditureRequest.proof_statuses[proof_status]
 
     if proof.attached?
-      # If there was no status (on new) or the proof status was not submitted,
+      # If there was no status set yet, or the proof status was not submitted,
       # and there is now something submitted, set the status to submitted.
       # If the proof has has changed, set the status back to submitted to reset it.
       if proof_status.nil? || proof_status == 'not_sbmitted' || proof.new_record?
@@ -79,7 +85,7 @@ class Finance::ExpenditureRequest < ApplicationRecord
       # Standardise the filename for the proof so they are easily linked to the correct expenditure.
       proof.blob.update(filename: "#{expense_date} - #{budget_line&.budget&.title.presence || 'No Budget'} - #{name} Proof.#{proof.filename.extension}")
     else
-      # If there is no longer a proof attached, set the status.
+      # If there is no longer a proof attached, set the status to match.
       new_proof_status = 0
     end
 

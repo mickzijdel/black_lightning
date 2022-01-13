@@ -7,6 +7,16 @@
     # INDEX:  /finance/expenditure_requests
     # SHOW:   /finance/expenditure_requests/1
     # EDIT:   /finance/expenditure_requests/1/edit
+    def edit
+      if @expenditure_request.request_sent_to_eusa? && @expenditure_request.proof_sent_to_eusa? && cannot?(:check, @expenditure_request)
+        helpers.append_to_flash(:error, 'This request has already been sent to EUSA. If you want to change it, please speak to the Business Manager.')
+        redirect_back fallback_location: admin_finance_expenditure_request_url(@expenditure_request)
+
+        return
+      end
+
+      super
+    end
     # UPDATE: /finance/expenditure_requests/1
 
     # NEW:    /finance/budgets/1/submit_expenditure_request

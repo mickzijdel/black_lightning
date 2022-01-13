@@ -1,23 +1,37 @@
 <%= simple_form_for([:admin, @expenditure_request]) do |f| %>
   <%= f.error_notification %>
 
+  <% if @expenditure_request.request_checked? %>
+    <b>This request has already been checked. If you change it, it will have to be checked again.</b>
+  <% elsif @expenditure_request.request_sent_to_eusa? && can?(:check, @expenditure_request) %>
+    <b>This request has already been sent to EUSA. You must manually inform them of the changes if you change it now.</b>
+  <% end %>
+
+  <% show_full_form = !@expenditure_request.request_sent_to_eusa? || can?(:check, @expenditure_request) %>
+
+  <% if !show_full_form %>
+      <b>This request has already been sent to EUSA. If you want to change it, please inform the Business Manager directly. You can only change the proof and the notes.</b>
+  <% end %>
+
   <div class="form-inputs">
-      <%= f.input :name %>
+      <% if show_full_form %>
+        <%= f.input :name %>
 
-      <%= f.association :budget_line, collection: @expenditure_request.budget.budget_lines.accessible_by(current_ability) %>
-      <%= f.association :transaction_category, collection: Finance::TransactionCategory.active.expense.accessible_by(current_ability), hint: 'If you cannot find a suitable category, please get in touch with the Business Manager.' %>
-      
-      <%= f.input :expense_date, hint: "The date the expense took place. It will likely be on the proof if you do not know. If you really do not know, just enter today's date" %>
+        <%= f.association :budget_line, collection: @expenditure_request.budget.budget_lines.accessible_by(current_ability) %>
+        <%= f.association :transaction_category, collection: Finance::TransactionCategory.active.expense.accessible_by(current_ability), hint: 'If you cannot find a suitable category, please get in touch with the Business Manager.' %>
+        
+        <%= f.input :expense_date, hint: "The date the expense took place. It will likely be on the proof if you do not know. If you really do not know, just enter today's date" %>
 
-      <%= f.input :amount, hint: 'Must be negative.' %>
-      
-      <%= f.input :reimbursement_method, hint: 'If you need to be reimbursed by bank transfer, please select Bacs. If you have an invoice, please check if it contains bank details. In this case, please set this to Bacs and make sure to attach the invoice as proof. If you specify Bacs, you must fill out the bank details, except for user, which is not required.', collection: enum_collection(Finance::ExpenditureRequest, 'reimbursement_method') %>
-  
-      <%= f.simple_fields_for :bank_information do |bank_information_form| %>
-        <div class="well">
-          <h3>Bank Details</h3>
-          <%= render 'bank_information_fields', f: bank_information_form %>
-        </div>
+        <%= f.input :amount, hint: 'Must be negative.' %>
+        
+        <%= f.input :reimbursement_method, hint: 'If you need to be reimbursed by bank transfer, please select Bacs. If you have an invoice, please check if it contains bank details. In this case, please set this to Bacs and make sure to attach the invoice as proof. If you specify Bacs, you must fill out the bank details, except for user, which is not required.', collection: enum_collection(Finance::ExpenditureRequest, 'reimbursement_method') %>
+    
+        <%= f.simple_fields_for :bank_information do |bank_information_form| %>
+          <div class="well">
+            <h3>Bank Details</h3>
+            <%= render 'bank_information_fields', f: bank_information_form %>
+          </div>
+        <% end %>
       <% end %>
 
       <% display_proof = true %>
@@ -28,7 +42,7 @@
         <% if can? :check, @expenditure_request %>
           <b>The proof has already been sent to EUSA. You must manually inform them of the changed proof if you change it now.</b>
         <% else %>
-          <% display_proof = false%>
+          <% display_proof = false %>
           <b>The proof has already been sent to EUSA. If you want to change it, please inform the Business Manager directly.</b>
         <% end %>
       <% end %>
