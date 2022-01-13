@@ -42,8 +42,8 @@ class Finance::ExpenditureRequest < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :transaction_category, class_name: 'Finance::TransactionCategory'
   belongs_to :bank_information, class_name: 'Finance::BankInformation', optional: true
-  # TODO: figure out how update_only works with creating.
-  accepts_nested_attributes_for :bank_information, allow_destroy: true#, update_only: true
+
+  accepts_nested_attributes_for :bank_information, allow_destroy: true
 
   has_one :budget, through: :budget_line, autosave: false
 
@@ -67,18 +67,29 @@ class Finance::ExpenditureRequest < ApplicationRecord
   end
 
   def update_status_after_save
+    # If there was no status (on new) or the proof status was not submitted, 
+    # and there is now something submitted, set the status to submitted.
+    new_proof_status = Finance::ExpenditureRequest.proof_statuses[proof_status]
+
     if proof_status.nil? || proof_status == 'not_sbmitted'
       if proof.attached?
-        proof_submitted!
+        new_proof_status = 1
       else
-        proof_not_submitted!
+        new_proof_status = 0
       end
     end
 
     if proof.attached?
+      # If the proof has has changed, set the status back to submitted to reset it.
+      if proof.new_record?
+        new_proof_status = 1
+      end
+
       # Standardise the filename for the proof so they are easily linked to the correct expenditure.
-      proof.blob.update(filename: "#{expense_date} - #{budget_line&.budget&.title.presence || 'No Budget'} - #{name}.#{proof.filename.extension}")
+      proof.blob.update(filename: "#{expense_date} - #{budget_line&.budget&.title.presence || 'No Budget'} - #{name} Proof.#{proof.filename.extension}")
     end
+
+    update_columns(proof_status: new_proof_status)
   end
 
   def update_status_after_create

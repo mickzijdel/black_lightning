@@ -20,8 +20,23 @@
         </div>
       <% end %>
 
-      <%= render 'shared/form/file_field', f: f, field_name: :proof  %>
-      <%= f.hint 'Upload the proof. If the proof consists of multiple images or documents, please combine these in a word document or PDF. Contact the Business Manager if you need any help.' %>
+      <% display_proof = true %>
+
+      <% if @expenditure_request.proof_checked? %>
+        <b>The proof has already been checked. If you change it, it will have to be checked again.</b>
+      <% elsif @expenditure_request.proof_sent_to_eusa? %>
+        <% if can? :check, @expenditure_request %>
+          <b>The proof has already been sent to EUSA. You must manually inform them of the changed proof if you change it now.</b>
+        <% else %>
+          <% display_proof = false%>
+          <b>The proof has already been sent to EUSA. If you want to change it, please inform the Business Manager directly.</b>
+        <% end %>
+      <% end %>
+
+      <% if display_proof %>
+        <%= render 'shared/form/file_field', f: f, field_name: :proof  %>
+        <%= f.hint 'Upload the proof. If the proof consists of multiple images or documents, please combine these in a word document or PDF. Contact the Business Manager if you need any help.' %>
+      <% end %>
 
       <%= render "/shared/form/md_editor", f: f, field: :submitter_notes, rows: 12, show_hint: true %>
 
