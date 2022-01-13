@@ -41,7 +41,7 @@ class Finance::BudgetLine < ApplicationRecord
 
   def actual_cents
     if expense?
-      return expenditure_requests.pluck(:amount_cents).sum
+      return expenditure_requests.approved.pluck(:amount_cents).sum
     elsif income?
       # TODO
       0

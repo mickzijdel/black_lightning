@@ -49,6 +49,11 @@ class Finance::ExpenditureRequest < ApplicationRecord
 
   has_one_attached :proof
 
+  # Returns budgets that have been checked or sent to EUSA
+  def self.approved
+    where(request_status: ['checked', 'sent_to_eusa'])
+  end
+
   def setup_bank_information
     build_bank_information if self.bank_information.nil?
   end

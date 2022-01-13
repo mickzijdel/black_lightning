@@ -246,6 +246,10 @@ ChaosRails::Application.routes.draw do
       resources :expenditure_requests
       resources :nominal_codes
       resources :transaction_categories
+
+      scope '/overview' do
+        get 'allocated_actual/(*page)', to: 'overview#allocated_actual', as: :allocated_actual
+      end
     end
 
     get '/reports/', to: 'reports#index', as: 'reports'

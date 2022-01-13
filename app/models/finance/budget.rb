@@ -34,6 +34,11 @@ class Finance::Budget < ApplicationRecord
   accepts_nested_attributes_for :team_members, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :budget_lines, reject_if: :all_blank, allow_destroy: true
 
+  def self.active
+    # TODO: Define this later once draft budgets exist.
+    all
+  end
+
   ##
   # Totals
   ##
@@ -59,7 +64,7 @@ class Finance::Budget < ApplicationRecord
 
   # TODO: Rename to expenditure
   def total_actual_expenses_cents
-    Finance::ExpenditureRequest.where(budget_line: budget_lines.ids).pluck(:amount_cents).sum
+    Finance::ExpenditureRequest.where(budget_line: budget_lines.ids).approved.pluck(:amount_cents).sum
   end
 
   def total_actual_income_cents
