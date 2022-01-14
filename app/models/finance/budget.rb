@@ -19,8 +19,10 @@ class Finance::Budget < ApplicationRecord
 
   after_initialize :add_default_budget_lines
 
-  validates :title, :notes, :budget_category, :status, presence: true
+  validates :title, :notes, :budget_category, :status, :is_draft, presence: true
   validates :title, uniqueness: true, format: ValidationHelper::filename_validation_regex
+
+  attribute :is_draft, :boolean, default: true
 
   enum budget_category: { 'Event' => 0, 'Committee' => 1, 'Fixed' => 2, 'Other' => 3 }
   enum status: { 'Initial' => 0, 'Modified' => 1, 'Checked' => 2 }

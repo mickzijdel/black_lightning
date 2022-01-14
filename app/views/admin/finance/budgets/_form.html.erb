@@ -7,7 +7,9 @@
       
       <%= f.input :budget_category, collection: enum_collection(Finance::Budget, 'budget_category') %>
 
-      <%= f.input :status,          collection: enum_collection(Finance::Budget, 'status') %>
+      <%= f.input :status,          collection: enum_collection(Finance::Budget, 'status'), disabled: cannot?(:check, @budget) %>
+
+      <%= f.input :is_draft, disabled: cannot?(:check, @budget) %>
   </div>
 
   <%= render "/shared/form/md_editor", f: f, field: :notes, rows: 12, show_hint: true %>

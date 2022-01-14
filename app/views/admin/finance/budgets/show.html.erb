@@ -5,6 +5,7 @@
   event: @budget.event.present? ? get_link(@budget.event, :show) : 'Not Linked',
   budget_category: @budget.budget_category,
   status: @budget.status,
+  is_draft: bool_text(@budget.is_draft),
 } %>
 
 <%= render 'shared/basic_fields', fields: fields %>

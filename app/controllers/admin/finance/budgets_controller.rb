@@ -15,11 +15,17 @@ class Admin::Finance::BudgetsController < AdminController
   end
 
   def permitted_params
-    [
-      :title, :notes, :event_id, :budget_category, :status,
+    accepted_params = [
+      :title, :notes, :event_id, :budget_category,
       team_members_attributes: %I[id _destroy position user_id],
       budget_lines_attributes: %I[id _destroy name allocated transaction_type]
     ]
+
+    if can?(:check, @budget)
+      accepted_params += [:is_draft, :status]
+    end
+    
+    return accepted_params
   end
 
   def order_args
