@@ -31,6 +31,8 @@ class Finance::ExpenditureRequest < ApplicationRecord
   validates :amount, numericality: { less_than: 0 }
   validates :name, uniqueness: { scope: :budget_line_id }
 
+  validate :inform_eusa_present_when_checked
+
   monetize :amount_cents
 
   enum request_status: { 'unchecked' => 0, 'has_issue' => 1, 'checked' => 2, 'sent_to_eusa' => 3 }, _prefix: :request, _default: 'unchecked'
@@ -51,15 +53,10 @@ class Finance::ExpenditureRequest < ApplicationRecord
   # Scopes
 
   def self.requires_attention
-    p where(request_status: 'unchecked')
-    p where(proof_status: 'submitted')
-
     where(request_status: 'unchecked').or(where(proof_status: 'submitted'))
   end
 
   def self.waiting_for_update
-    p self.where(request_status: ['has_issue'])
-    p self.where(proof_status: ['not_submitted', 'has_issue'])
     self.where(request_status: ['has_issue']).or(self.where(proof_status: ['not_submitted', 'has_issue']))
   end
 
@@ -115,5 +112,13 @@ class Finance::ExpenditureRequest < ApplicationRecord
     end
 
     update_columns(proof_status: new_proof_status)
+  end
+
+  # Validations
+
+  def inform_eusa_present_when_checked
+    if !request_unchecked? && inform_eusa.nil?
+      errors.add(:inform_eusa, 'cannot be blank after checking.')
+    end
   end
 end

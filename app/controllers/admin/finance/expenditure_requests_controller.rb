@@ -56,7 +56,7 @@ class Admin::Finance::ExpenditureRequestsController < AdminController
     accepted_params = [:name, :expense_date, :reimbursement_method, :amount, :proof, :submitter_notes, :budget_line_id, :transaction_category_id, bank_information_attributes: [:id, :account_holder_name, :sort_code, :account_number, :user_id]]
 
     if can? :check, @expenditure_request
-      accepted_params = accepted_params + [:user_id, :business_manager_notes, :request_status, :proof_status]
+      accepted_params += [:user_id, :business_manager_notes, :request_status, :proof_status, :inform_eusa]
     end
 
     return accepted_params
