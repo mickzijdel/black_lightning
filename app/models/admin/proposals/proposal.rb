@@ -132,6 +132,11 @@ class Admin::Proposals::Proposal < ApplicationRecord
 
     @show.venue = venue
 
+    # Once the proposal is approved, the budget is activated.
+    if @show.budget.present?
+      @show.budget.update(is_draft: false)
+    end
+
     unless @show.save
       @show.errors.full_messages.each do |error|
         p error

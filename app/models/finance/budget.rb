@@ -38,9 +38,9 @@ class Finance::Budget < ApplicationRecord
 
   validates_associated :budget_lines
 
+  # Only budgets that are not draft and have been checked at least once.
   def self.active
-    # TODO: Define this later once draft budgets exist.
-    all
+    where(is_draft: false).where(status: ['Modified', 'Checked'])
   end
 
   ##
