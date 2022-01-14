@@ -24,8 +24,8 @@ class Finance::Budget < ApplicationRecord
 
   attribute :is_draft, :boolean, default: true
 
-  enum budget_category: { 'Event' => 0, 'Committee' => 1, 'Fixed' => 2, 'Other' => 3 }
-  enum status: { 'Initial' => 0, 'Modified' => 1, 'Checked' => 2 }
+  enum budget_category: { 'event' => 0, 'committee' => 1, 'fixed' => 2, 'other' => 3 }
+  enum status: { 'initial' => 0, 'modified' => 1, 'checked' => 2 }
 
   belongs_to :event, class_name: 'Event', optional: true
 
@@ -40,7 +40,7 @@ class Finance::Budget < ApplicationRecord
 
   # Only budgets that are not draft and have been checked at least once.
   def self.active
-    where(is_draft: false).where(status: ['Modified', 'Checked'])
+    where(is_draft: false).where(status: ['modified', 'checked'])
   end
 
   ##

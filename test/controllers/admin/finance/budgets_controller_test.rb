@@ -11,7 +11,7 @@ class Admin::Finance::BudgetsControllerTest < ApplicationIntegrationTest
     @params = {
       finance_budget: {
         budget_category: 'Committee',
-        status: 'Initial',
+        status: 'initial',
         title: 'Marketing Manager',
         notes: 'This is for A0 posters mainly.'
       }
