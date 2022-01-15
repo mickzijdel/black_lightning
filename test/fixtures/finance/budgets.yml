@@ -18,3 +18,4 @@ front_of_house:
     notes: 'Henlo'
     budget_category: 1
     status: 2
+    is_draft: false

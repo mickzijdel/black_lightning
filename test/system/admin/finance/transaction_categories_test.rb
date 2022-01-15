@@ -23,7 +23,7 @@ class Admin::Finance::TransactionCategoriesTest < ApplicationSystemTestCase
     fill_in "Hint", with: @admin_finance_transaction_category.hint
     fill_in "Name", with: 'Sustainability'
     select @admin_finance_transaction_category.nominal_code.to_label, from: 'Nominal Code'
-    select @admin_finance_transaction_category.transaction_type, from: 'Transaction Type'
+    select @admin_finance_transaction_category.transaction_type.titleize, from: 'Transaction Type'
 
     click_on "Create Transaction category"
 

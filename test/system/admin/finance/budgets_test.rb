@@ -17,8 +17,8 @@ class Admin::Finance::BudgetsTest < ApplicationSystemTestCase
     visit admin_finance_budgets_url
     click_on "New Budget"
 
-    select @admin_finance_budget.status, from: 'Status'
-    select @admin_finance_budget.budget_category, from: 'Budget Category'
+    select @admin_finance_budget.status.titleize, from: 'Status'
+    select @admin_finance_budget.budget_category.titleize, from: 'Budget Category'
     select @admin_finance_budget.event&.title, from: 'Event'
     fill_in "Title", with: 'IT'
     fill_in 'Notes', with: 'Yada Yada'

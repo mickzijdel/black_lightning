@@ -21,6 +21,8 @@ FactoryBot.define do
     budget_category { [0, 1, 2].sample }
     status { [0, 1, 2].sample }
 
+    is_draft { [true, false].sample }
+
     association :event, factory: :show
   end
 end
