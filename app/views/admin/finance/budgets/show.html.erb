@@ -19,6 +19,19 @@
 
 <%= render '/shared/admin_show_team_members', team_members: @budget.team_members %>
 
+<h3>Expenditure</h3>
+<% headers = [ :name, :amount, :request_status, :proof_status, :date] %>
+
+<% field_sets = @budget.expenditure_requests.order(:expense_date).map { |expenditure_request| [
+  expenditure_request,  
+  humanized_money_with_symbol(expenditure_request.amount),
+  expenditure_request.request_status.titleize,
+  expenditure_request.proof_status.titleize,
+  expenditure_request.expense_date
+] }%>
+
+<%= render 'shared/index_table', headers: headers, field_sets: field_sets, resource_class: Finance::ExpenditureRequest %>
+
 <%= render '/shared/show_actions', object: @budget do %>
   <%= get_link Finance::ExpenditureRequest, :new_, http_method: :get, query_params: { budget_id: @budget.id } %> 
 <% end %>

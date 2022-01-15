@@ -1,4 +1,6 @@
-<%= search_form_for @q, builder: SimpleForm::FormBuilder, url: controller_path.split('/').last, html: { id: "search", class: "form-search" } do |f| %>
+<% url = '/' + controller_path if url.nil? %>
+
+<%= search_form_for @q, builder: SimpleForm::FormBuilder, url: url, html: { id: "search", class: "form-search" } do |f| %>
   <% input_fields.each do |key, params| %>
     <% if params.key?(:label) %>
       <% label = params[:label] %>

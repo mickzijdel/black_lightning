@@ -15,6 +15,7 @@ en:
         active: 'Is Active'
         allocated: 'Allocated'
         amount: 'Amount'
+        amount_cents: 'Amount (in cents)'
         account_holder_name: 'Account Holder Name'
         account_number: 'Account Number'
         bank_information: 'Bank Information'

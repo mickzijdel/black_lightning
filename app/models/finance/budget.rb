@@ -32,6 +32,7 @@ class Finance::Budget < ApplicationRecord
   has_many :team_members, -> { includes(:user) }, class_name: '::TeamMember', as: :teamwork, dependent: :restrict_with_error
   has_many :users, through: :team_members
   has_many :budget_lines, class_name: 'Finance::BudgetLine', dependent: :restrict_with_error
+  has_many :expenditure_requests, class_name: 'Finance::ExpenditureRequest', through: :budget_lines
 
   accepts_nested_attributes_for :team_members, reject_if: :all_blank, allow_destroy: true
   accepts_nested_attributes_for :budget_lines, reject_if: :all_blank, allow_destroy: true
