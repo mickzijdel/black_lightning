@@ -23,6 +23,8 @@ class Finance::Budget < ApplicationRecord
   validates :title, uniqueness: true, format: ValidationHelper::filename_validation_regex
   validates :eutc_grant_amount, numericality: { greater_than_or_equal_to: 0 }
 
+  validate :has_team_members
+
   attribute :is_draft, :boolean, default: true
 
   enum budget_category: { 'event' => 0, 'committee' => 1, 'fixed' => 2, 'other' => 3 }
@@ -111,5 +113,13 @@ class Finance::Budget < ApplicationRecord
     options = merge_hash(defaults, options)
 
     super(options)
+  end
+
+  # Validations
+  def has_team_members
+    unless team_members.size.positive?
+      # TODO: What to add to?
+      errors.add(:team_members, 'You must set at least one team member.')
+    end
   end
 end
