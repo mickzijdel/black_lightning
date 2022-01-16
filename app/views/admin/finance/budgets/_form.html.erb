@@ -10,13 +10,16 @@
       <%= f.input :status,          collection: enum_collection(Finance::Budget, 'status'), disabled: cannot?(:check, @budget) %>
 
       <%= f.input :is_draft, disabled: cannot?(:check, @budget) %>
+
+      <%= render "/shared/form/md_editor", f: f, field: :notes, rows: 12, show_hint: true %>
+
+      <%= render '/shared/form/sections/team_members', f: f, help_editable_block_name: 'Budget - Team Members Help' %>
+
+      <%= render '/admin/finance/budget_lines/form_partial', f: f %>
+
+      <% grant_hint = can?(:check, @budget) ? 'This is the amount this budget receives from the EUTC. You should not add fundraising and grants money. This can be set to be added to the budget on the income request!' : 'This is the amount you are requesting from the EUTC. Do not include other income sources, such as grants and fundraisers, here, but do include them in the lines above.' %>
+      <%= f.input :eutc_grant_amount, disabled: @budget.is_draft && cannot?(:check, @budget), hint: grant_hint %>
   </div>
-
-  <%= render "/shared/form/md_editor", f: f, field: :notes, rows: 12, show_hint: true %>
-
-  <%= render '/shared/form/sections/team_members', f: f, help_editable_block_name: 'Budget - Team Members Help' %>
-
-  <%= render '/admin/finance/budget_lines/form_partial', f: f %>
 
   <%= render '/shared/form/form_actions', f: f %>
 <% end %>

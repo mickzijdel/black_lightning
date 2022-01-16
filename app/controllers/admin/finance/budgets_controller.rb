@@ -25,6 +25,9 @@ class Admin::Finance::BudgetsController < AdminController
       accepted_params += [:is_draft, :status]
     end
     
+    if can?(:check, @budget) || @budget.is_draft
+      accepted_params += [:eutc_grant_amount]
+    end
     return accepted_params
   end
 

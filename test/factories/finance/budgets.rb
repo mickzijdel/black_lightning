@@ -23,6 +23,7 @@ FactoryBot.define do
 
     is_draft { [true, false].sample }
 
+    eutc_grant_amount_cents { rand(25000) }
     association :event, factory: :show
   end
 end

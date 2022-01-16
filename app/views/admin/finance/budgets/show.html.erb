@@ -6,6 +6,8 @@
   budget_category: @budget.budget_category,
   status: @budget.status,
   is_draft: bool_text(@budget.is_draft),
+  eutc_grant_amount: humanized_money_with_symbol(@budget.eutc_grant_amount),
+  total_amount_left: humanized_money_with_symbol(@budget.total_amount_left),
 } %>
 
 <%= render 'shared/basic_fields', fields: fields %>

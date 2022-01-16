@@ -19,8 +19,9 @@ class Finance::Budget < ApplicationRecord
 
   after_initialize :add_default_budget_lines
 
-  validates :title, :notes, :budget_category, :status, :is_draft, presence: true
+  validates :title, :notes, :budget_category, :status, :eutc_grant_amount, :eutc_grant_amount_cents, presence: true
   validates :title, uniqueness: true, format: ValidationHelper::filename_validation_regex
+  validates :eutc_grant_amount, numericality: { greater_than_or_equal_to: 0 }
 
   attribute :is_draft, :boolean, default: true
 
@@ -39,6 +40,8 @@ class Finance::Budget < ApplicationRecord
 
   validates_associated :budget_lines
 
+  monetize :eutc_grant_amount_cents
+
   # Only budgets that are not draft and have been checked at least once.
   def self.active
     where(is_draft: false).where(status: ['modified', 'checked'])
@@ -54,6 +57,9 @@ class Finance::Budget < ApplicationRecord
   monetize :total_actual_expenses_cents
   monetize :total_actual_income_cents
   monetize :total_actual_cents
+
+  monetize :total_amount_to_spend_cents
+  monetize :total_amount_left_cents
 
   def total_allocated_expenses_cents
     budget_lines.expense.pluck(:allocated_cents).sum
@@ -79,6 +85,17 @@ class Finance::Budget < ApplicationRecord
   def total_actual_cents
     total_actual_expenses_cents + total_actual_income_cents
   end
+
+  def total_amount_to_spend_cents
+    # TODO: Total income requests that count towards the total amount to spend
+    eutc_grant_amount_cents + 0
+  end
+
+  def total_amount_left_cents
+    # Plus because expenditure is negative.
+    total_amount_to_spend_cents + total_actual_expenses_cents
+  end
+
   # If the budget is first initialized, add the default lines such as rights, tech, set, etc.
   def add_default_budget_lines
     return unless new_record? && budget_lines.empty?

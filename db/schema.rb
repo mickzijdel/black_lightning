@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_14_171558) do
+ActiveRecord::Schema.define(version: 2022_01_15_173431) do
 
   create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -352,6 +352,8 @@ ActiveRecord::Schema.define(version: 2022_01_14_171558) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "is_draft", null: false
+    t.integer "eutc_grant_amount_cents", default: 0, null: false
+    t.string "eutc_grant_amount_currency", default: "GBP", null: false
     t.index ["budget_category"], name: "index_finance_budgets_on_budget_category"
     t.index ["event_id"], name: "index_finance_budgets_on_event_id"
     t.index ["status"], name: "index_finance_budgets_on_status"
