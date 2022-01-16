@@ -33,6 +33,42 @@ class Ability
     end
   end
 
+  # Permissions that are individually overridden for admin and also included in the usual initialization for non-admins.
+  # Poor name but I cannot think of anything better.
+  # NOTE THAT THIS FUNCTION IS NOT REACHED BY USERS THAT ARE NOT SIGNED IN.
+  def shared_permissions(user)
+    # Everyone can create a complaint.
+    can :create, Complaint
+
+    # Bank Information
+    # TODO: Can edit own saved Bank Information
+
+    # Budgets: Users can edit and submit budgets that they are on.
+    # Cannot directly create budgets, only as part of a proposal, which is not authorized like this.
+    can [:read, :update], Finance::Budget, users: { id: user.id }
+    can [:submit], Finance::Budget, { users: { id: user.id }, is_draft: false }
+
+    # Expenditure Requests: Users can update expenditure requests they submitted.
+    can [:read, :update], Finance::ExpenditureRequest, user_id: user.id
+
+    can :show, Finance::NominalCode
+    can :show, Finance::TransactionCategory
+    # TODO: Financial Year.
+
+    # Income
+    if user.has_role?('Business Manager')
+      can :manage, Finance::BankInformation
+      can :manage, Finance::BudgetLine
+      can :manage, Finance::Budget
+      can :manage, Finance::ExpenditureRequest
+      can :manage, Finance::NominalCode
+      can :manage, Finance::TransactionCategory
+      can
+
+      # TODO: Financial Year. 
+    end
+  end
+
   # Define the permissions for a user.
   def initialize(user)
     # The 4 CRUD actions are automatically aliased to the 7 RESTful actions.
@@ -56,8 +92,14 @@ class Ability
       can [:update, :read, :delete], Admin::Proposals::Proposal, users: { id: user.id }
       can [:index, :create], Admin::Proposals::Proposal, call: { submission_deadline: DateTime.now..DateTime::Infinity.new }
 
-      cannot :manage, Complaint
-      can :create, Complaint
+      # Admins do not get any finance rights beyond normal users.
+      admin_cannot_manage_models = [Complaint] + Finance.classes
+
+      admin_cannot_manage_models.each do |model|
+        cannot :manage, model.class
+      end
+
+      shared_permissions(user)
 
       # To override restrictions if the admin has the appropriate role.
       set_permissions_based_on_grid(user)
@@ -96,9 +138,6 @@ class Ability
     can [:sign_up, :create], MarketingCreatives::Profile
     # Only people with explicit permission can do new. Create is an alias for new, so it has to be explicitly disallowed.
     cannot :new, MarketingCreatives::Profile
-
-    # Everyone can create a complaint.
-    can [:create], Complaint
 
     can :show, Admin::EditableBlock, admin_page: false
     can :show, Admin::EditableBlock, admin_page: nil
@@ -168,6 +207,8 @@ class Ability
       can %i[show edit update reject], MarketingCreatives::Profile, id: user.marketing_creatives_profile.id
       can :read, MarketingCreatives::CategoryInfo, profile: user.marketing_creatives_profile
     end
+
+    shared_permissions(user)
 
     set_permissions_based_on_grid(user)
 
