@@ -56,7 +56,7 @@ class Admin::Finance::ExpenditureRequestsTest < ApplicationSystemTestCase
     page.accept_confirm do
       click_on 'Destroy', match: :first
     end
-    assert_text "The Expenditure request has been successfully destroyed."
+    assert_text "The Expenditure Request \"Receipts Printer Rolls\" has been successfully destroyed."
     assert_not_text @admin_finance_expenditure_request.name
   end
 end

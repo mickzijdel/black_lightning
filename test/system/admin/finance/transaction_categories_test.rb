@@ -27,7 +27,7 @@ class Admin::Finance::TransactionCategoriesTest < ApplicationSystemTestCase
 
     click_on "Create Transaction category"
 
-    assert_text 'The Transaction Category "Sustainability" was successfully created'
+    assert_text 'The Transaction Category "Sustainability - For equipment hires, gels, etc" was successfully created'
   end
 
   test "should update Transaction category" do
@@ -42,7 +42,7 @@ class Admin::Finance::TransactionCategoriesTest < ApplicationSystemTestCase
     select @admin_finance_transaction_category.transaction_type.titleize, from: 'Transaction Type'
     click_on "Update Transaction category"
 
-    assert_text 'The Transaction Category "Tech" was successfully updated.'
+    assert_text 'The Transaction Category "Tech - For equipment hires, gels, etc" was successfully updated.'
   end
 
   test "should destroy Transaction category" do
