@@ -62,9 +62,6 @@
         <%= f.input :request_status,  collection: enum_collection(Finance::ExpenditureRequest, 'request_status'),  selected: @expenditure_request.request_status || 'pending_send_to_eusa' %>
         
         <%= f.input :proof_status,    collection: enum_collection(Finance::ExpenditureRequest, 'proof_status'),    selected: @expenditure_request.proof_status || 'pending_send_to_eusa' %>      
-
-        <%- # This is currently very explicit. Can maybe me more implicit (just a checkbox that defaults to true?) %>
-        <%= f.input :inform_eusa, as: :select, include_blank: @expenditure_request.inform_eusa.nil?, hint: 'Include this expenditure request in the BACS request/list of invoices. Should be "Yes" for reimbursements, but "No" when processing actuals received from EUSA (such as utilities)' %>
       <% end %>
   </div>
 

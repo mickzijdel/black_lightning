@@ -38,7 +38,6 @@ en:
         title: 'Title'
         transaction_type: 'Transaction Type'
         user: 'User'
-        inform_eusa: 'Inform EUSA'
 
     # Labels and hints examples
     # labels:

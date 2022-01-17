@@ -4,6 +4,7 @@
   budget_line: get_link(@expenditure_request.budget_line.budget, :show, link_text: @expenditure_request.budget_line.name_with_budget),
   transaction_category: get_link(@expenditure_request.transaction_category, :show),
   expense_date: @expenditure_request.expense_date,
+  processed_date: @expenditure_request.processed_date,
   amount: humanized_money_with_symbol(@expenditure_request.amount),
   user: user_link(@expenditure_request.user, false),
   reimbursement_method: @expenditure_request.reimbursement_method.titleize,
@@ -11,7 +12,6 @@
   request_status: @expenditure_request.request_status.titleize,
   proof_status: @expenditure_request.proof_status.titleize,
   proof: 'No Proof',
-  inform_eusa: @expenditure_request.inform_eusa.nil? ? 'Not Set yet' : bool_text(@expenditure_request.inform_eusa.presence),
 } %>
 
 <% fields[:proof] = link_to(@expenditure_request.proof.blob.filename, rails_blob_path(@expenditure_request.proof, disposition: "attachment")) if @expenditure_request.proof.attached? %>
