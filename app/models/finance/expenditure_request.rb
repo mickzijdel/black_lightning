@@ -30,13 +30,10 @@ class Finance::ExpenditureRequest < ApplicationRecord
   validates :name, format: ValidationHelper::filename_validation_regex
   validates :amount, numericality: { less_than: 0 }
   validates :name, uniqueness: { scope: :budget_line_id }
-
-  validate :inform_eusa_present_when_checked
-
   monetize :amount_cents
 
-  enum request_status: { 'unchecked' => 0, 'has_issue' => 1, 'checked' => 2, 'sent_to_eusa' => 3 }, _prefix: :request, _default: 'unchecked'
-  enum proof_status: { 'not_submitted' => 0, 'submitted' => 1, 'has_issue' => 2, 'checked' => 3, 'sent_to_eusa' => 4 }, _prefix: :proof
+  enum request_status: { 'unchecked' => 0, 'has_issue' => 1, 'pending_send_to_eusa' => 2, 'processed' => 3 }, _prefix: :request, _default: 'unchecked'
+  enum proof_status: { 'not_submitted' => 0, 'submitted' => 1, 'has_issue' => 2, 'pending_send_to_eusa' => 3, 'processed' => 4 }, _prefix: :proof
   enum reimbursement_method: { 'bacs' => 0, 'invoice' => 1 }
 
   belongs_to :budget_line, class_name: 'Finance::BudgetLine'
@@ -64,14 +61,14 @@ class Finance::ExpenditureRequest < ApplicationRecord
     return self.request_approved.proof_approved
   end
 
-  # Returns requests that have been checked or sent to EUSA
+  # Returns requests that are to be send to eusa or processed.
   def self.request_approved
-    where(request_status: ['checked', 'sent_to_eusa'])
+    where(request_status: ['pending_send_to_eusa', 'processed'])
   end
 
-  # Returns requests with proofs that have been checked or sent to EUSA
+  # Returns requests with proofs that are to be send to eusa or processed.
   def self.proof_approved
-    where(proof_status: ['checked', 'sent_to_eusa'])
+    where(proof_status: ['pending_send_to_eusa', 'processed'])
   end
 
   # Helper
@@ -112,13 +109,5 @@ class Finance::ExpenditureRequest < ApplicationRecord
     end
 
     update_columns(proof_status: new_proof_status)
-  end
-
-  # Validations
-
-  def inform_eusa_present_when_checked
-    if !request_unchecked? && inform_eusa.nil?
-      errors.add(:inform_eusa, 'cannot be blank after checking.')
-    end
   end
 end

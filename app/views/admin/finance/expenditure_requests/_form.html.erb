@@ -1,13 +1,13 @@
 <%= simple_form_for([:admin, @expenditure_request]) do |f| %>
   <%= f.error_notification %>
 
-  <% if @expenditure_request.request_checked? %>
-    <b>This request has already been checked. If you change it, it will have to be checked again.</b>
-  <% elsif @expenditure_request.request_sent_to_eusa? && can?(:check, @expenditure_request) %>
-    <b>This request has already been sent to EUSA. You must manually inform them of the changes if you change it now.</b>
+  <% if @expenditure_request.request_pending_send_to_eusa? %>
+    <b>This request has already been checked and is pending to be send to EUSA. If you change it now, it will have to be checked again.</b>
+  <% elsif @expenditure_request.request_processed? && can?(:check, @expenditure_request) %>
+    <b>This request has already been processed. You can still edit it, but you must inform EUSA manually of changes, if applicable.</b>
   <% end %>
 
-  <% show_full_form = !@expenditure_request.request_sent_to_eusa? || can?(:check, @expenditure_request) %>
+  <% show_full_form = !@expenditure_request.request_processed? || can?(:check, @expenditure_request) %>
 
   <% if !show_full_form %>
       <b>This request has already been sent to EUSA. If you want to change it, please inform the Business Manager directly. You can only change the proof and the notes.</b>
@@ -36,14 +36,14 @@
 
       <% display_proof = true %>
 
-      <% if @expenditure_request.proof_checked? %>
-        <b>The proof has already been checked. If you change it, it will have to be checked again.</b>
-      <% elsif @expenditure_request.proof_sent_to_eusa? %>
+      <% if @expenditure_request.proof_pending_send_to_eusa? %>
+        <b>The proof has already been checked and is pending to be send to EUSA. If you change it now, it will have to be checked again.</b>
+      <% elsif @expenditure_request.proof_processed? %>
         <% if can? :check, @expenditure_request %>
-          <b>The proof has already been sent to EUSA. You must manually inform them of the changed proof if you change it now.</b>
+          <b>The proof has already been processed. If you change it now, you will have to inform EUSA manually, if applicable.</b>
         <% else %>
           <% display_proof = false %>
-          <b>The proof has already been sent to EUSA. If you want to change it, please inform the Business Manager directly.</b>
+          <b>The proof has already been processed. If you want to change it, please inform the Business Manager directly.</b>
         <% end %>
       <% end %>
 
@@ -59,9 +59,9 @@
         
         <%= render '/shared/form/user_field', f: f, hint: "The person who submitted the Expenditure Request.#{'When left empty, it will default to the current user, which is you.' if @expenditure_request.new_record? }" %>
 
-        <%= f.input :request_status,  collection: enum_collection(Finance::ExpenditureRequest, 'request_status'),  selected: @expenditure_request.request_status || 'checked' %>
+        <%= f.input :request_status,  collection: enum_collection(Finance::ExpenditureRequest, 'request_status'),  selected: @expenditure_request.request_status || 'pending_send_to_eusa' %>
         
-        <%= f.input :proof_status,    collection: enum_collection(Finance::ExpenditureRequest, 'proof_status'),    selected: @expenditure_request.proof_status || 'checked' %>      
+        <%= f.input :proof_status,    collection: enum_collection(Finance::ExpenditureRequest, 'proof_status'),    selected: @expenditure_request.proof_status || 'pending_send_to_eusa' %>      
 
         <%- # This is currently very explicit. Can maybe me more implicit (just a checkbox that defaults to true?) %>
         <%= f.input :inform_eusa, as: :select, include_blank: @expenditure_request.inform_eusa.nil?, hint: 'Include this expenditure request in the BACS request/list of invoices. Should be "Yes" for reimbursements, but "No" when processing actuals received from EUSA (such as utilities)' %>
