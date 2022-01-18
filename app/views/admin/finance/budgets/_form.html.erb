@@ -1,6 +1,12 @@
 <%= simple_nested_form_for([:admin, @budget]) do |f| %>
   <%= f.error_notification %>
 
+  <% if @budget.checked? %>
+  <b>This budget has already been checked. If you change it now, it will have to be checked again.</b>
+  <% elsif @budget.modified? %>
+  <b>This budget has been checked previously, but has already been modified. You can change it now, but it will have to be checked again.</b>
+  <% end %>
+
   <div class="form-inputs">
       <%= f.input :title, disabled: cannot?(:create, @budget) %>
       <%= f.association :event, disabled: cannot?(:create, @budget) %>

@@ -18,6 +18,7 @@ class Finance::Budget < ApplicationRecord
   has_paper_trail
 
   after_initialize :add_default_budget_lines
+  after_save :update_status_after_save
 
   validates :title, :notes, :budget_category, :status, :eutc_grant_amount, :eutc_grant_amount_cents, presence: true
   validates :title, uniqueness: true, format: ValidationHelper::filename_validation_regex
@@ -98,15 +99,6 @@ class Finance::Budget < ApplicationRecord
     total_amount_to_spend_cents + total_actual_expenses_cents
   end
 
-  # If the budget is first initialized, add the default lines such as rights, tech, set, etc.
-  def add_default_budget_lines
-    return unless new_record? && budget_lines.empty?
-
-    Finance::BudgetLine::DEFAULT_NAMES.each do |name|
-      budget_lines << Finance::BudgetLine.new(name: name, allocated: 0, transaction_type: 'expense')
-    end
-  end
-
   def as_json(options = {})
     defaults = {include: [:budget_lines, team_members: { methods: [:user_name] }] }
 
@@ -118,8 +110,27 @@ class Finance::Budget < ApplicationRecord
   # Validations
   def has_team_members
     unless team_members.size.positive?
-      # TODO: What to add to?
       errors.add(:team_members, 'You must set at least one team member.')
+    end
+  end
+
+  # Callbacks
+
+  # When the budget is first initialized, add the default lines such as rights, tech, set, etc.
+  def add_default_budget_lines
+    return unless new_record? && budget_lines.empty?
+
+    Finance::BudgetLine::DEFAULT_NAMES.each do |name|
+      budget_lines << Finance::BudgetLine.new(name: name, allocated: 0, transaction_type: 'expense')
+    end
+  end
+
+  def update_status_after_save
+    # If the budget was previously checked and is now changed, set the status to modified.
+    # Do not overwrite if it is manually changed
+
+    if !status_previously_changed? && status_previously_was == 'checked' && (saved_changes.slice(:eutc_grant_amount).any? || budget_lines.map(&:changed).any?)
+      update_columns(status: Finance::Budget.statuses['modified'])
     end
   end
 end
