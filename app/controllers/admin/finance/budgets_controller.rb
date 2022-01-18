@@ -16,18 +16,23 @@ class Admin::Finance::BudgetsController < AdminController
 
   def permitted_params
     accepted_params = [
-      :title, :notes, :event_id, :budget_category,
+      :notes,
       team_members_attributes: %I[id _destroy position user_id],
       budget_lines_attributes: %I[id _destroy name allocated transaction_type]
     ]
 
+    if can?(:create, @budget)
+      accepted_params += [:title, :event_id, :budget_category,]
+    end
+
     if can?(:check, @budget)
       accepted_params += [:is_draft, :status]
     end
-    
+
     if can?(:check, @budget) || @budget.is_draft
       accepted_params += [:eutc_grant_amount]
     end
+
     return accepted_params
   end
 
