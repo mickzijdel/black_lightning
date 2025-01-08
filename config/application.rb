@@ -72,5 +72,8 @@ module ChaosRails
 
     # Set image loading to lazy.
     config.action_view.image_loading = 'lazy'
+
+    config.mission_control.jobs.base_controller_class = 'Admin::JobControlController'
+    config.mission_control.jobs.http_basic_auth_enabled = false
   end
 end

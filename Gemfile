@@ -28,6 +28,7 @@ gem 'kramdown'
 
 gem 'daemons'
 gem 'delayed_job_active_record'
+gem 'mission_control-jobs'
 
 gem 'caxlsx'
 gem 'leaflet-rails'

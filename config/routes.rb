@@ -20,19 +20,19 @@ ChaosRails::Application.routes.draw do
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
+  mount MissionControl::Jobs::Engine, at: '/jobs'
 
   resources :events,      only: [:index]
-  resources :shows,       only: [:index, :show]
-  resources :workshops,   only: [:index, :show]
-  resources :seasons,     only: [:index, :show]
-  resources :news,        only: [:index, :show]
-  resources :venues,      only: [:index, :show] do
-    collection do 
+  resources :shows,       only: %i[index show]
+  resources :workshops,   only: %i[index show]
+  resources :seasons,     only: %i[index show]
+  resources :news,        only: %i[index show]
+  resources :venues,      only: %i[index show] do
+    collection do
       get 'map'
     end
   end
-
 
   resources :membership_activation_tokens, only: [] do
     member do
@@ -46,7 +46,7 @@ ChaosRails::Application.routes.draw do
     member do
       put 'consent'
     end
-  
+
     collection do
       get 'current', to: 'users#current'
     end
@@ -60,14 +60,12 @@ ChaosRails::Application.routes.draw do
     get path, to: redirect('complaints/new')
   end
 
-  resources :complaints, only: [:new, :create]
+  resources :complaints, only: %i[new create]
 
   get 'attachments/:slug(/:style)', to: 'attachments#file', as: 'attachment'
 
   # Test route
-  if Rails.env.test? || Rails.env.development?
-    get 'tests/test_500', to: 'tests#test_500'
-  end
+  get 'tests/test_500', to: 'tests#test_500' if Rails.env.test? || Rails.env.development?
 
   namespace :admin do
     get '', to: 'dashboard#index'
@@ -77,7 +75,7 @@ ChaosRails::Application.routes.draw do
     get 'resources/membership_checker', to: 'resources#membership_checker', as: :resources_membership_checker
     get 'resources/(*page)', to: 'resources#page', as: :resources
 
-    resources :events, only: [:index, :show] do
+    resources :events, only: %i[index show] do
       member do
         get 'xts', to: 'events#find_by_xts_id'
       end
@@ -121,13 +119,13 @@ ChaosRails::Application.routes.draw do
 
     resources :maintenance_sessions
     resources :maintenance_attendances
-  
+
     resources :venues do
-      collection do 
+      collection do
         get 'map'
       end
     end
-  
+
     resources :seasons
     resources :news
     resources :fault_reports
@@ -178,7 +176,7 @@ ChaosRails::Application.routes.draw do
     end
 
     resources :reviews
-  
+
     resources :roles do
       member do
         post 'add_user', to: 'roles#add_user'
@@ -266,31 +264,31 @@ ChaosRails::Application.routes.draw do
 
     get 'tests', to: 'tests#index'
     namespace :tests do
-      get 'test_alerts/:type',action: 'test_alerts', as: 'test_alerts'
+      get 'test_alerts/:type', action: 'test_alerts', as: 'test_alerts'
       get 'test_404'
       get 'test_500'
       get 'test_access_denied'
     end
 
-    resources :complaints, except: [:new, :create] do
+    resources :complaints, except: %i[new create] do
       get 'new', to: redirect('/complaints/new')
     end
 
     get '/reports/', to: 'reports#index', as: 'reports'
     namespace 'reports' do
-      %w(roles members newsletter_subscribers staffing).each do |action|
+      %w[roles members newsletter_subscribers staffing].each do |action|
         put action, action: action, as: action
       end
     end
 
     namespace 'jobs' do
-      %w(overview working pending failed remove retry).each do |action|
+      %w[overview working pending failed remove retry].each do |action|
         get action, action: action, as:  action, controller: '/admin/job_control'
       end
     end
 
     namespace 'help' do
-      %w(kramdown venue_location).each do |action|
+      %w[kramdown venue_location].each do |action|
         get action, action: action, as:  action, controller: '/admin/help'
       end
     end
@@ -299,11 +297,9 @@ ChaosRails::Application.routes.draw do
     get 'bootstrap_test', to: 'static#bootstrap_test', as: :bootstrap_test
     # Catch all 404's on the admin site.
     get '*page', to: 'static#error', as: :static
-    
+
     # Test route
-    if Rails.env.test? || Rails.env.development?
-      get 'dashboard/widget/:widget_name', to: 'dashboard#widget'
-    end
+    get 'dashboard/widget/:widget_name', to: 'dashboard#widget' if Rails.env.test? || Rails.env.development?
   end
 
   get 'archives', to: 'archives#index', as: :archives_index
@@ -312,7 +308,7 @@ ChaosRails::Application.routes.draw do
     get 'shows', to: 'shows#index', as: :shows
     get 'workshops', to: 'workshops#index', as: :workshops
     get 'proposals', to: 'proposals#index', as: :proposals
-    get 'seasons',    to: 'seasons#index',    as: :seasons
+    get 'seasons', to: 'seasons#index', as: :seasons
   end
   get 'archives/(*page)', to: 'archives#page', as: :archives
 
@@ -341,7 +337,6 @@ ChaosRails::Application.routes.draw do
     # Exclude active_storage paths from being redirected to the 404 page.
     !request.path.starts_with?('/rails/active_storage') && !request.path.starts_with?('/assets')
   }
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
