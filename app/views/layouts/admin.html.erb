@@ -18,14 +18,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
-    <div class="preloader flex-column justify-content-center align-items-center">
-      <img class="" src="https://eutc.azureedge.net/img/logos/svg/bedlam-logo_base-multiline.svg"
-        alt="Bedlam Theatre EUTC Logo" height="120" /><br />
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <!-- Left navbar links -->
@@ -57,6 +49,7 @@
               <i class="fas <%= debt_icon %> mr-2"></i>
               You are <%= @header_user.debt_message_suffix %>
             </a>
+          </div>
         </li>
       </ul>
     </nav>
