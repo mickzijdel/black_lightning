@@ -1,7 +1,17 @@
 import jQuery from 'jquery';
 global.$ = global.jQuery = jQuery;
 
-import "./sweetalert"
+
+// Use CommonJS require to bypass ES module timing issues
+// (ES modules with type="module" have deferred evaluation that breaks window.Turbo assignment)
+const Turbo = require("@hotwired/turbo");
+
+Turbo.start();
+
+window.Turbo = Turbo;
+
+// Now sweetalert can access window.Turbo synchronously
+require("./sweetalert");
 
 import 'jquery-slimscroll'
 
@@ -12,9 +22,6 @@ import './src/shared/input_validator'
 
 // Load all the stimulus controllers
 import "./controllers"
-
-import Rails from '@rails/ujs';
-Rails.start();
 
 require("@rails/activestorage").start()
 

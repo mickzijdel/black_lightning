@@ -7,7 +7,7 @@
   <% headers = [:name, 'Actions'] %>
   <% field_sets = users.map { |user| { fields: [
     user,
-    link_to('Remove', remove_url_helper.call(user.id), method: :delete, class: 'btn btn-sm btn-danger', confirm: "Remove #{user.name} from this role?")
+    link_to('Remove', remove_url_helper.call(user.id), class: 'btn btn-sm btn-danger', data: { turbo_method: :delete, turbo_confirm: "Remove #{user.name} from this role?" })
   ] } } %>
 <% else %>
   <% headers = [:name] %>

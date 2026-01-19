@@ -5,6 +5,9 @@ if gem list --no-installed --exact --silent foreman; then
   gem install foreman
 fi
 
+# If you don't clobber the assets, Rails will not serve the live files
+rails assets:clobber
+
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 

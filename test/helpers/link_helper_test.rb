@@ -72,7 +72,7 @@ class LinkHelperTest < ActionView::TestCase
   end
 
   test "get_link with index" do
-    expected_link = '<a class="btn btn-secondary" title="Show All Fault Reports" data-method="get" href="/admin/fault_reports"><span class="no-wrap"><i class="fas fa-th-list" aria-hidden=”true”></i> Show All</span> Fault Reports</a>'
+    expected_link = '<a class="btn btn-secondary" title="Show All Fault Reports" href="/admin/fault_reports"><span class="no-wrap"><i class="fas fa-th-list" aria-hidden="true"></i> Show All</span> Fault Reports</a>'
 
     assert_equal expected_link, get_link(FaultReport, :index)
 
@@ -83,7 +83,7 @@ class LinkHelperTest < ActionView::TestCase
 
   test "get_link with show" do
     proposal_call = FactoryBot.create(:proposal_call, id: 1, name: "Dionysia Proposals")
-    expected_link = '<a class="" title="Dionysia Proposals" data-method="get" href="/admin/proposals/calls/1">Dionysia Proposals</a>'
+    expected_link = '<a class="" title="Dionysia Proposals" href="/admin/proposals/calls/1">Dionysia Proposals</a>'
 
     assert_equal expected_link, get_link(proposal_call, :show)
 
@@ -93,7 +93,7 @@ class LinkHelperTest < ActionView::TestCase
   end
 
   test "get_link with new" do
-    expected_link = '<a class="btn btn-primary" title="New Maintenance Debt" data-method="get" href="/admin/maintenance_debts/new"><span class="no-wrap"><i class="fas fa-plus" aria-hidden=”true”></i> New</span> Maintenance Debt</a>'
+    expected_link = '<a class="btn btn-primary" title="New Maintenance Debt" href="/admin/maintenance_debts/new"><span class="no-wrap"><i class="fas fa-plus" aria-hidden="true"></i> New</span> Maintenance Debt</a>'
 
     assert_equal expected_link, get_link(Admin::MaintenanceDebt, :new)
 
@@ -104,7 +104,7 @@ class LinkHelperTest < ActionView::TestCase
 
   test "get_link with edit with no_wrap" do
     staffing = FactoryBot.create(:staffing, id: 1)
-    expected_link = '<a class="btn btn-secondary no-wrap" title="Edit" data-method="get" href="/admin/staffings/1/edit"><span class="no-wrap"><i class="fas fa-pencil-alt" aria-hidden=”true”></i> Edit</span></a>'
+    expected_link = '<a class="btn btn-secondary no-wrap" title="Edit" href="/admin/staffings/1/edit"><span class="no-wrap"><i class="fas fa-pencil-alt" aria-hidden="true"></i> Edit</span></a>'
 
     assert_equal expected_link, get_link(staffing, :edit, no_wrap: true)
 
@@ -115,7 +115,7 @@ class LinkHelperTest < ActionView::TestCase
 
   test "get_link with destroy" do
     news = FactoryBot.create(:news, id: 1, title: "Vikings have taken over the Bedlam")
-    expected_link = "<a class=\"btn btn-danger\" data-title=\"Deleting the News &quot;Vikings have taken over the Bedlam&quot;\" data-confirm=\"Are you sure you want to delete the News &quot;Vikings have taken over the Bedlam&quot;?\" title=\"Destroy\" rel=\"nofollow\" data-method=\"delete\" href=\"/admin/news/1-vikings-have-taken-over-the-bedlam\"><span class=\"no-wrap\"><i class=\"fas fa-trash\" aria-hidden=”true”></i> Destroy</span></a>"
+    expected_link = "<a class=\"btn btn-danger\" data-title=\"Deleting the News &quot;Vikings have taken over the Bedlam&quot;\" data-turbo-confirm=\"Are you sure you want to delete the News &quot;Vikings have taken over the Bedlam&quot;?\" data-turbo-method=\"delete\" title=\"Destroy\" href=\"/admin/news/1-vikings-have-taken-over-the-bedlam\"><span class=\"no-wrap\"><i class=\"fas fa-trash\" aria-hidden=\"true\"></i> Destroy</span></a>"
 
     assert_equal expected_link, get_link(news, :destroy)
 
@@ -126,7 +126,7 @@ class LinkHelperTest < ActionView::TestCase
 
   test "get_link with approve" do
     news = FactoryBot.create(:opportunity, id: 1)
-    expected_link = "<a class=\"btn btn-success\" title=\"Approve\" rel=\"nofollow\" data-method=\"put\" href=\"/admin/opportunities/1/approve\">Approve</a>"
+    expected_link = "<a class=\"btn btn-success\" data-turbo-method=\"put\" title=\"Approve\" href=\"/admin/opportunities/1/approve\">Approve</a>"
 
     assert_equal expected_link, get_link(news, :approve)
 
@@ -137,7 +137,7 @@ class LinkHelperTest < ActionView::TestCase
 
   test "get_link with reject" do
     news = FactoryBot.create(:opportunity, id: 1)
-    expected_link = '<a class="btn btn-danger" title="Reject" rel="nofollow" data-method="put" href="/admin/opportunities/1/reject">Reject</a>'
+    expected_link = '<a class="btn btn-danger" data-turbo-method="put" title="Reject" href="/admin/opportunities/1/reject">Reject</a>'
 
     assert_equal expected_link, get_link(news, :reject)
 
@@ -153,7 +153,7 @@ class LinkHelperTest < ActionView::TestCase
       get_link(maintenance_debt, :convert_to_staffing_debt)
     end
 
-    expected_link = "<a class=\"btn btn-secondary\" title=\"Convert To Staffing Debt\" rel=\"nofollow\" data-method=\"put\" href=\"/admin/maintenance_debts/1/convert_to_staffing_debt\">Convert To Staffing Debt</a>"
+    expected_link = "<a class=\"btn btn-secondary\" data-turbo-method=\"put\" title=\"Convert To Staffing Debt\" href=\"/admin/maintenance_debts/1/convert_to_staffing_debt\">Convert To Staffing Debt</a>"
 
     assert_equal expected_link, get_link(maintenance_debt, :convert_to_staffing_debt, http_method: :put)
   end
@@ -200,7 +200,7 @@ class LinkHelperTest < ActionView::TestCase
 
     assert_not @current_user.can?(:destroy, news)
 
-    expected_link = "<a class=\"btn btn-danger\" data-title=\"Deleting the News &quot;Vikings have taken over the Bedlam&quot;\" data-confirm=\"Are you sure you want to delete the News &quot;Vikings have taken over the Bedlam&quot;?\" title=\"Destroy\" rel=\"nofollow\" data-method=\"delete\" href=\"/admin/news/1-vikings-have-taken-over-the-bedlam\"><span class=\"no-wrap\"><i class=\"fas fa-trash\" aria-hidden=”true”></i> Destroy</span></a>"
+    expected_link = "<a class=\"btn btn-danger\" data-title=\"Deleting the News &quot;Vikings have taken over the Bedlam&quot;\" data-turbo-confirm=\"Are you sure you want to delete the News &quot;Vikings have taken over the Bedlam&quot;?\" data-turbo-method=\"delete\" title=\"Destroy\" href=\"/admin/news/1-vikings-have-taken-over-the-bedlam\"><span class=\"no-wrap\"><i class=\"fas fa-trash\" aria-hidden=\"true\"></i> Destroy</span></a>"
 
     assert_equal expected_link, get_link(news, :destroy, condition: true)
   end
@@ -393,10 +393,10 @@ class LinkHelperTest < ActionView::TestCase
 
     assert_nil get_confirm_data(object, :show, nil, nil, nil)
 
+    # verify is embedded in turbo_confirm message, not a separate key
     confirm_hash = {
       title: "Hexagon",
-      confirm: nil,
-      verify: "Pineapple"
+      turbo_confirm: "[VERIFY:Pineapple]"
     }
 
     assert_equal confirm_hash, get_confirm_data(object, :edit, "Hexagon", nil, "Pineapple")
@@ -405,10 +405,10 @@ class LinkHelperTest < ActionView::TestCase
   test "get_confirm_data for destroy" do
     object = FactoryBot.create(:draft_mass_mail, subject: "We are building a Hexagon again!")
 
+    # verify is no longer a separate key (embedded in turbo_confirm when present)
     default_destroy_hash_for_object_with_subject = {
       title: 'Deleting the Mass Mail "We are building a Hexagon again!"',
-      confirm: 'Are you sure you want to delete the Mass Mail "We are building a Hexagon again!"?',
-      verify: nil
+      turbo_confirm: 'Are you sure you want to delete the Mass Mail "We are building a Hexagon again!"?'
     }
 
     assert_equal default_destroy_hash_for_object_with_subject, get_confirm_data(object, :destroy, nil, nil, nil)
@@ -417,16 +417,14 @@ class LinkHelperTest < ActionView::TestCase
 
     default_destroy_hash = {
       title: "Deleting the Staffing Debt",
-      confirm: "Are you sure you want to delete the Staffing Debt?",
-      verify: nil
+      turbo_confirm: "Are you sure you want to delete the Staffing Debt?"
     }
 
     assert_equal default_destroy_hash, get_confirm_data(object, :destroy, nil, nil, nil)
 
     overridden_destroy_hash = {
       title: "Deleting the Staffing Debt",
-      confirm: "Pineapple",
-      verify: nil
+      turbo_confirm: "Pineapple"
     }
     assert_equal overridden_destroy_hash, get_confirm_data(object, :destroy, nil, "Pineapple", nil)
   end

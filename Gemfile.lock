@@ -631,10 +631,12 @@ DEPENDENCIES
   solargraph
   solid_queue
   spring
+  stimulus-rails
   stringex
   terser
   test-prof
   thruster
+  turbo-rails
   tzinfo-data
   webdrivers
 

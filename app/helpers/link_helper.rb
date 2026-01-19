@@ -96,7 +96,10 @@ module LinkHelper
     # Removes prepending pencil tags and such.
     title ||= strip_tags(link_text).strip
 
-    link = link_to(link_text, link_target, class: html_class, method: http_method, data: confirm_data, title: title, target: target)
+    data = confirm_data || {}
+    data[:turbo_method] = http_method if http_method.present? && http_method != :get
+
+    link = link_to(link_text, link_target, class: html_class, data: data, title: title, target: target)
 
     link = wrap_in_tags(link, wrap_tag) if wrap_tag
 
@@ -116,7 +119,7 @@ module LinkHelper
   end
 
   def generate_icon_prefix(icon_name, prefix)
-    "<span class=\"no-wrap\"><i class=\"fas fa-#{icon_name}\" aria-hidden=”true”></i> #{prefix}</span>".html_safe
+    "<span class=\"no-wrap\"><i class=\"fas fa-#{icon_name}\" aria-hidden=\"true\"></i> #{prefix}</span>".html_safe
   end
 
   def view_page_on_main_site_button
@@ -200,17 +203,23 @@ module LinkHelper
   def get_confirm_data(object, action, title, confirm, verify)
     return unless action == :destroy || title.present? || confirm.present? || verify.present?
 
-    confirm_data = {
-      title: title,
-      confirm: confirm,
-      verify: verify
-    }
+    confirm_data = { title: title }
 
-    # Destroy has a default hash, that we don't want to use for other confirm dialogs because that could lead to confusion.
+    # Destroy has a default confirm message
     if action == :destroy
       name = get_object_name(object, include_class_name: true, include_the: true)
       confirm_data[:title] ||= "Deleting #{name}"
-      confirm_data[:confirm] ||= "Are you sure you want to delete #{name}?"
+      confirm ||= "Are you sure you want to delete #{name}?"
+    end
+
+    # Embed verify text in the confirm message using [VERIFY:text] delimiter
+    # (Turbo only copies turbo-* attributes to synthetic forms, so data-verify is lost)
+    if verify.present? && confirm.present?
+      confirm_data[:turbo_confirm] = "#{confirm}\n\n[VERIFY:#{verify}]"
+    elsif verify.present?
+      confirm_data[:turbo_confirm] = "[VERIFY:#{verify}]"
+    else
+      confirm_data[:turbo_confirm] = confirm
     end
 
     confirm_data

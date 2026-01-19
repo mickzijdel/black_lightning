@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', function() {
   activateSelect2Fields(document);
 });
 
+// Re-initialise select2 fields after Turbo navigation.
+document.addEventListener('turbo:load', function() {
+  activateSelect2Fields(document);
+});
+
 // Initialise all select2 fields that are added dynamically using cocoon.
 $(document).on("cocoon:after-insert", function(e, insertedItem, originalEvent) {
   activateSelect2Fields(insertedItem[0]);

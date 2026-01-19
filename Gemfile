@@ -6,6 +6,11 @@ gem "rails", "~> 8.0"
 
 gem "mysql2", github: "mickzijdel/mysql2", branch: "master"
 
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
 gem "cssbundling-rails"
 gem "jsbundling-rails"
 gem "propshaft"

@@ -3,9 +3,9 @@
 
 <head>
   <title><%= "#{@title} | " unless @title.nil? %>Bedlam Theatre Members</title>
-  <%= javascript_include_tag "admin", "shared", defer: true %>
+  <%= javascript_include_tag "admin", "shared", "data-turbo-track": "reload" %>
 
-  <%= stylesheet_link_tag    "admin", media: "all" %>
+  <%= stylesheet_link_tag    "admin", "data-turbo-track": "reload", media: "all" %>
 
   <%= render('layouts/cdn_includes') %>
 

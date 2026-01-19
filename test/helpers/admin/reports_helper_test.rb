@@ -14,6 +14,6 @@ class Admin::ReportsHelperTest < ActionView::TestCase
   end
 
   test "should get report link" do
-    assert_equal '<a rel="nofollow" data-method="put" href="/admin/reports/roles">Roles</a>', get_report_link(:roles, "Roles")
+    assert_equal '<a rel="nofollow" data-turbo-method="put" href="/admin/reports/roles">Roles</a>', get_report_link(:roles, "Roles")
   end
 end
