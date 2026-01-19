@@ -4,9 +4,13 @@
 
 <% if pictures.any? then %>
   <script type="text/javascript">
-    Fancybox.bind('[data-fancybox]', {
-      // Your custom options
-    });  
+    // Unbind first to avoid duplicate bindings on Turbo navigation
+    if (typeof Fancybox !== 'undefined') {
+      Fancybox.unbind('[data-fancybox="gallery"]');
+      Fancybox.bind('[data-fancybox="gallery"]', {
+        // Your custom options
+      });
+    }
   </script>
 
 <div class="row">

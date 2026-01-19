@@ -1,7 +1,18 @@
-// Execute the script after the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize TemplateLoader on pages that have the required meta tags
+function initTemplateLoader() {
+  // Only initialize on pages with the templates feature
+  var baseUrlMeta = document.querySelector('meta[name="templates-base-url"]');
+  if (!baseUrlMeta) return;
+
+  // Avoid duplicate initialization
+  if (document.body.dataset.templateLoaderInitialized) return;
+  document.body.dataset.templateLoaderInitialized = 'true';
+
   new TemplateLoader();
-});
+}
+
+document.addEventListener('DOMContentLoaded', initTemplateLoader);
+document.addEventListener('turbo:load', initTemplateLoader);
 
 // Constants for item types to avoid typos and improve readability
 const ITEMS_TYPE = {

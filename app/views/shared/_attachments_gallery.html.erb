@@ -5,9 +5,13 @@
 
 <% if attachments.any? then %>
   <script type="text/javascript">
-    Fancybox.bind('[data-fancybox]', {
-      // Your custom options
-    });  
+    // Unbind first to avoid duplicate bindings on Turbo navigation
+    if (typeof Fancybox !== 'undefined') {
+      Fancybox.unbind('[data-fancybox]');
+      Fancybox.bind('[data-fancybox]', {
+        // Your custom options
+      });
+    }
   </script>
 
   <% if include_header%>

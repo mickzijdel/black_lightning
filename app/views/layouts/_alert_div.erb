@@ -7,10 +7,18 @@
 
   <% # Get the flash as json, then pass it on to a JavaScript function that renders the flashes. %>
   <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-      flashJson = <%= flash_as_alert_hash.to_h.to_json.html_safe %>;
-      showFlashAlerts(flashJson);
-    });
+    (function() {
+      var flashJson = <%= flash_as_alert_hash.to_h.to_json.html_safe %>;
+      // Execute immediately - script runs after DOM is parsed
+      // Works for both initial load and Turbo navigations
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          showFlashAlerts(flashJson);
+        });
+      } else {
+        showFlashAlerts(flashJson);
+      }
+    })();
   </script>
 
   <% flash.discard %>
