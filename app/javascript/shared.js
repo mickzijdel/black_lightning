@@ -1,6 +1,8 @@
 import jQuery from 'jquery';
 global.$ = global.jQuery = jQuery;
 
+// Import select2 jQuery plugin (must be after jQuery is set globally)
+import 'select2';
 
 // Use CommonJS require to bypass ES module timing issues
 // (ES modules with type="module" have deferred evaluation that breaks window.Turbo assignment)
