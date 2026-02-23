@@ -32,6 +32,8 @@ class Admin::EditableBlock < ApplicationRecord
 
   normalizes :name, with: ->(name) { name&.strip }
 
+  after_commit :clear_navbar_cache
+
   def self.groups
     select("`group`").distinct.map(&:group).reject(&:blank?)
   end
@@ -44,5 +46,12 @@ class Admin::EditableBlock < ApplicationRecord
     Rails.cache.fetch("editable_block_#{id}_#{updated_at.to_i}", expires_in: 7.days) do
       Kramdown::Document.new(content || "", input: "BKramdown").to_html
     end
+  end
+
+  private
+
+  def clear_navbar_cache
+    section = url&.split("/")&.first
+    Rails.cache.delete("navbar_editable_blocks/#{section}") if section.present?
   end
 end

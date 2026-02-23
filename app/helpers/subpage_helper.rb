@@ -20,11 +20,13 @@ module SubpageHelper
   end
 
   def get_subpage_editable_blocks(subpage_type)
-    subpage_editable_blocks = Admin::EditableBlock.where("url LIKE ?", "#{subpage_type}%")
-    # Organise according to ordering, and if those are equal, alphabetically.
-    # Reject the subpages that are further than one layer deep.
-    # Example: (about/tree -> tree -> does not contain a / so is kept) (about/tree/apple -> tree/apple -> contains a / so is rejected)
-    subpage_editable_blocks.order(:ordering, :name).reject { |editable_block| editable_block.url.count("/") > subpage_type.count("/") + 1 }
+    Rails.cache.fetch("navbar_editable_blocks/#{subpage_type}", expires_in: 1.day) do
+      subpage_editable_blocks = Admin::EditableBlock.where("url LIKE ?", "#{subpage_type}%")
+      # Organise according to ordering, and if those are equal, alphabetically.
+      # Reject the subpages that are further than one layer deep.
+      # Example: (about/tree -> tree -> does not contain a / so is kept) (about/tree/apple -> tree/apple -> contains a / so is rejected)
+      subpage_editable_blocks.order(:ordering, :name).reject { |editable_block| editable_block.url.count("/") > subpage_type.count("/") + 1 }
+    end
   end
 
   # Get the children for the public front-end navbar, with subpage_type being about, get_involved or archives
