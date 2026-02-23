@@ -29,7 +29,7 @@ class Archives::ProposalsController < AdminController
                                    .page(params[:page]).per(20)
 
     @proposals = result_proposals.where(call_id: @calls.ids)
-                                 .includes(:call, team_members: [ user: [ :admin_maintenance_debts, :admin_staffing_debts ] ])
+                                 .includes(:call, team_members: :user)
                                  .order("admin_proposals_calls.submission_deadline DESC")
                                  .group_by(&:call)
 
