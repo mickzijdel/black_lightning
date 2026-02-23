@@ -90,7 +90,7 @@ module Admin::SharedDebtHelper
       # If we are just displaying one user, also display the fulfilled debts even if the box was not ticked.
       is_specific_user = true
       show_fulfilled = true
-    elsif debt_class.accessible_by(current_ability).map { |debt| debt.user.id }.uniq.count < 2
+    elsif debt_class.accessible_by(current_ability).distinct.pluck(:user_id).count < 2
       is_specific_user = true
       show_fulfilled = true
     else

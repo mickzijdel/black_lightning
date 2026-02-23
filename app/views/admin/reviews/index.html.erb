@@ -15,7 +15,7 @@
     reviewer_cont:      { slug: 'defaults.reviewer' },
     organisation_cont:  { slug: 'defaults.organisation' },
     rating_eq:          { slug: 'defaults.rating' },
-    event_id_eq:        { slug: 'defaults.event', type: :select, collection: Event.accessible_by(current_ability).select{ |event| event.reviews.any? } }
+    event_id_eq:        { slug: 'defaults.event', type: :select, collection: Event.accessible_by(current_ability).joins(:reviews).distinct }
 } %>
 
 
