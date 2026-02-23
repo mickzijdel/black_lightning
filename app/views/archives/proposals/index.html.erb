@@ -24,7 +24,7 @@ search_form = render('/shared/pages/public/partials/search_form', search_fields:
         <% proposals.each do |proposal| %>
           <div>
             <%= get_link proposal, :show %>
-            <%= proposal.labels true %>
+            <%= proposal.labels true, show_debtors: false %>
           </div>
         <% end %>
       <% end %>

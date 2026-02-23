@@ -89,12 +89,12 @@ class Admin::Proposals::Proposal < ApplicationRecord
   end
 
   # Generates a list of html labels with info about the proposal.
-  def labels(pull_right)
+  def labels(pull_right, show_debtors: true)
     labels = []
 
     labels << generate_label(label_css_class, formatted_status)
     labels << generate_label(:danger, "Late") if late
-    labels << generate_label(:danger, "Has Debtors") if has_debtors
+    labels << generate_label(:danger, "Has Debtors") if show_debtors && has_debtors
 
     labels_html = labels.join("\n").html_safe
 
