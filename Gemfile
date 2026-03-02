@@ -56,6 +56,7 @@ gem "rack-cors"
 gem "stringex"
 
 gem "honeybadger"
+gem "rack-timeout"
 
 gem "csv"
 
