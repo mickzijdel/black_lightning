@@ -10,7 +10,7 @@
 # image builds on a different Ruby than the tests ran on, or the suite goes green against a
 # database server nobody deploys.
 #
-# Part of the dev-env standard (dev-hooks:dev-env-setup, v23) — run by the hk `versions` step and
+# Part of the dev-env standard (dev-hooks:dev-env-setup, v24) — run by the hk `versions` step and
 # CI's `versions` job so the local and CI gates can't drift. Don't hand-edit the logic; the next
 # policy change should be a plain re-copy of the template (a repo's own formatter may re-indent
 # this file to local style, which is fine).
@@ -27,14 +27,20 @@
 # Deliberately NOT enforced: Dockerfile style. Whether an image hardcodes `ARG NODE_VERSION` or
 # derives the Node major from .node-version is a per-repo choice. This verifies that whatever
 # pins exist agree, so adopting the standard never forces a Dockerfile rewrite.
+#
+# EVERY Dockerfile in the repo root is checked, not just the first one found. A repo
+# commonly carries a production `Dockerfile` beside a `Dockerfile.dev`, and stopping at the first
+# is how one of them sat on node:22 for months while .node-version, mise.toml and the production
+# Dockerfile all said 24 — with this gate green the whole time, in the repo whose own docs claimed
+# Node 24 "everywhere".
 
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 
 fail=0
 note() {
-	echo "  ✗ $1"
-	fail=1
+  echo "  ✗ $1"
+  fail=1
 }
 skip() { echo "  - $1"; }
 
@@ -44,25 +50,37 @@ trap 'rm -f "$TMP"' EXIT
 # ── Toolchain pins ────────────────────────────────────────────────────────────────────
 MISE=""
 for f in mise.toml .mise.toml; do
-	if [ -f "$f" ]; then
-		MISE=$f
-		break
-	fi
+  if [ -f "$f" ]; then
+    MISE=$f
+    break
+  fi
 done
 
-DOCKERFILE=""
-for f in Dockerfile Containerfile; do
-	if [ -f "$f" ]; then
-		DOCKERFILE=$f
-		break
-	fi
+# Newline-separated, because a `for f in $DOCKERFILES` would word-split a name containing a
+# space. An unmatched glob is left literal by the shell (no nullglob here), so `Dockerfile.*` in
+# a repo with only a plain `Dockerfile` survives as that literal string — the `[ -f ]` guard is
+# what drops it, and must not be removed. `Dockerfile` itself needs the literal dot to match
+# `Dockerfile.*`, so it can never be listed twice.
+#
+# Excluded: editor/VCS leftovers (`Dockerfile.dev.bak`, `Dockerfile.orig`) and templates
+# (`Dockerfile.j2`) — neither is a build input, and a template's `ARG NODE_VERSION={{ ... }}`
+# would fail forever with no correct value to change it to.
+DOCKERFILES=""
+for f in Dockerfile Containerfile Dockerfile.* Containerfile.*; do
+  [ -f "$f" ] || continue
+  case $f in
+    *.bak | *.orig | *.rej | *.save | *.swp | *.swo | *.tmp | *.disabled | *~) continue ;;
+    *.example | *.sample | *.j2 | *.tpl | *.template | *.erb) continue ;;
+  esac
+  DOCKERFILES="$DOCKERFILES$f
+"
 done
 
 # A mise.toml `[tools]` value. Handles both `node = "22.4.1"` and the table form
 # `ruby = { version = "4.0.2", compile = false }` by taking the first quoted string after `=`.
 read_mise() {
-	[ -n "$MISE" ] || return 0
-	awk -v key="$1" '
+  [ -n "$MISE" ] || return 0
+  awk -v key="$1" '
     /^[[:space:]]*\[/ { intools = ($0 ~ /^[[:space:]]*\[tools\][[:space:]]*$/); next }
     !intools { next }
     {
@@ -75,29 +93,34 @@ read_mise() {
   ' "$MISE"
 }
 
-# Dockerfile `ARG NAME=value` defaults, deduplicated. A multi-stage build may redeclare a bare
-# `ARG NAME` to pull it into a later stage's scope; those carry no pin, so only `=` lines count.
+# One Dockerfile's `ARG NAME=value` defaults, one per line, deduplicated. A multi-stage build may
+# redeclare a bare `ARG NAME` to pull it into a later stage's scope; those carry no pin, so only
+# `=` lines count. $1 is the file, $2 the ARG name.
+#
+# Strips blanks, CR and quotes but NOT newlines: `[:space:]` here used to delete the line
+# separators too, which collapsed two differing defaults into one line, so `lines` could only
+# ever answer 0 or 1 and the caller's "conflicting defaults" branch was unreachable. A file
+# declaring 24.19.0 and 20.0.0 reported the value as "24.19.020.0.0" instead.
 read_arg() {
-	[ -n "$DOCKERFILE" ] || return 0
-	sed -n "s/^[[:space:]]*ARG[[:space:]]\{1,\}$1=//p" "$DOCKERFILE" | tr -d "[:space:]\"'" | sort -u
+  sed -n "s/^[[:space:]]*ARG[[:space:]]\{1,\}$2=//p" "$1" | tr -d "[:blank:]\r\"'" | sort -u
 }
 
 # package.json's `"packageManager": "pnpm@9.1.0+sha512…"` — corepack's pin, for the JS stack.
 read_pkgmgr() {
-	[ -f package.json ] || return 0
-	sed -n 's/.*"packageManager"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' package.json |
-		head -n1 | awk -F'@' -v t="$1" 'NF > 1 && $1 == t { sub(/\+.*/, "", $2); print $2 }'
+  [ -f package.json ] || return 0
+  sed -n 's/.*"packageManager"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' package.json |
+    head -n1 | awk -F'@' -v t="$1" 'NF > 1 && $1 == t { sub(/\+.*/, "", $2); print $2 }'
 }
 
 # `.ruby-version` may be bare (3.4.10) or prefixed (ruby-3.4.10); `.node-version` may carry a
 # leading v (v22.4.1). Every form is valid for setup-* and mise, so normalise before comparing.
 normalize() {
-	local v
-	v=$(printf '%s' "$2" | tr -d "[:space:]\"'")
-	v=${v#"$1"-}
-	v=${v#"$1"}
-	case $v in v[0-9]*) v=${v#v} ;; esac
-	printf '%s' "$v"
+  local v
+  v=$(printf '%s' "$2" | tr -d "[:space:]\"'")
+  v=${v#"$1"-}
+  v=${v#"$1"}
+  case $v in v[0-9]*) v=${v#v} ;; esac
+  printf '%s' "$v"
 }
 
 lines() { printf '%s' "$1" | grep -c .; }
@@ -108,70 +131,75 @@ first_ver=""
 all_srcs=""
 mismatch=0
 add_source() { # $1 label, $2 version
-	n=$((n + 1))
-	all_srcs="${all_srcs:+$all_srcs, }$1"
-	if [ "$n" -eq 1 ]; then
-		first_src=$1
-		first_ver=$2
-	elif [ "$2" != "$first_ver" ]; then
-		note "$1 ($2) != $first_src ($first_ver)"
-		mismatch=1
-	fi
+  n=$((n + 1))
+  all_srcs="${all_srcs:+$all_srcs, }$1"
+  if [ "$n" -eq 1 ]; then
+    first_src=$1
+    first_ver=$2
+  elif [ "$2" != "$first_ver" ]; then
+    note "$1 ($2) != $first_src ($first_ver)"
+    mismatch=1
+  fi
 }
 
 echo "Toolchain:"
 [ -n "$MISE" ] || skip "no mise.toml, so no mise pins to cross-check"
-[ -n "$DOCKERFILE" ] || skip "no Dockerfile, so no image-build ARGs to cross-check"
+[ -n "$DOCKERFILES" ] || skip "no Dockerfile, so no image-build ARGs to cross-check"
 
 # tool | version file (empty = no conventional one) | Dockerfile ARG
 while IFS='|' read -r tool vfile arg; do
-	[ -n "$tool" ] || continue
-	n=0
-	first_src=""
-	first_ver=""
-	all_srcs=""
-	mismatch=0
-	floating=""
+  [ -n "$tool" ] || continue
+  n=0
+  first_src=""
+  first_ver=""
+  all_srcs=""
+  mismatch=0
+  floating=""
 
-	if [ -n "$vfile" ] && [ -f "$vfile" ]; then
-		ver=$(normalize "$tool" "$(cat "$vfile")")
-		[ -n "$ver" ] && add_source "$vfile" "$ver"
-	fi
+  if [ -n "$vfile" ] && [ -f "$vfile" ]; then
+    ver=$(normalize "$tool" "$(cat "$vfile")")
+    [ -n "$ver" ] && add_source "$vfile" "$ver"
+  fi
 
-	raw=$(read_mise "$tool")
-	if [ -n "$raw" ]; then
-		# "latest"/"lts" and backend-prefixed specs (aqua:…, ruby-build:…) name no fixed version —
-		# mise.lock is their real pin — so there is nothing to compare a version file against.
-		case $raw in
-		*:*) floating=$raw ;;
-		*[0-9]*) add_source "$MISE $tool" "$(normalize "$tool" "$raw")" ;;
-		*) floating=$raw ;;
-		esac
-	fi
+  raw=$(read_mise "$tool")
+  if [ -n "$raw" ]; then
+    # "latest"/"lts" and backend-prefixed specs (aqua:…, ruby-build:…) name no fixed version —
+    # mise.lock is their real pin — so there is nothing to compare a version file against.
+    case $raw in
+      *:*) floating=$raw ;;
+      *[0-9]*) add_source "$MISE $tool" "$(normalize "$tool" "$raw")" ;;
+      *) floating=$raw ;;
+    esac
+  fi
 
-	raw=$(read_pkgmgr "$tool")
-	[ -n "$raw" ] && add_source "package.json packageManager" "$(normalize "$tool" "$raw")"
+  raw=$(read_pkgmgr "$tool")
+  [ -n "$raw" ] && add_source "package.json packageManager" "$(normalize "$tool" "$raw")"
 
-	raw=$(read_arg "$arg")
-	case "$(lines "$raw")" in
-	0) ;;
-	1) add_source "$DOCKERFILE ARG $arg" "$(normalize "$tool" "$raw")" ;;
-	*) note "$DOCKERFILE declares ARG $arg with conflicting defaults: $(printf '%s' "$raw" | tr '\n' ' ')" ;;
-	esac
+  # Each Dockerfile is its own source, labelled by name: with two of them the ✓ line lists both,
+  # and a mismatch says which file to fix rather than just "Dockerfile".
+  while IFS= read -r dockerfile; do
+    [ -n "$dockerfile" ] || continue
+    raw=$(read_arg "$dockerfile" "$arg")
+    case "$(lines "$raw")" in
+      0) ;;
+      1) add_source "$dockerfile ARG $arg" "$(normalize "$tool" "$raw")" ;;
+      *) note "$dockerfile declares ARG $arg with conflicting defaults: $(printf '%s' "$raw" | tr '\n' ' ')" ;;
+    esac
+  done <<<"$DOCKERFILES"
 
-	# A floating mise spec is only worth mentioning when some other file does pin the tool —
-	# on its own it is the standard's normal state, not a gap.
-	floating_note=""
-	[ -n "$floating" ] && floating_note=" ($MISE spec is \"$floating\", no fixed version to compare)"
+  # A floating mise spec is only worth mentioning when some other file does pin the tool —
+  # on its own it is the standard's normal state, not a gap.
+  floating_note=""
+  [ -n "$floating" ] && floating_note=" ($MISE spec is \"$floating\", no fixed version to compare)"
 
-	case $n in
-	0) ;; # this repo pins the tool nowhere — nothing to say about it
-	1) skip "$tool: pinned only in $first_src ($first_ver)$floating_note, nothing to cross-check" ;;
-	*)
-		[ -n "$floating" ] && skip "$tool: $MISE spec is \"$floating\" (no fixed version), not compared"
-		[ "$mismatch" = 0 ] && echo "  ✓ $tool $first_ver — $all_srcs"
-		;;
-	esac
+  case $n in
+    0) ;; # this repo pins the tool nowhere — nothing to say about it
+    1) skip "$tool: pinned only in $first_src ($first_ver)$floating_note, nothing to cross-check" ;;
+    *)
+      [ -n "$floating" ] && skip "$tool: $MISE spec is \"$floating\" (no fixed version), not compared"
+      [ "$mismatch" = 0 ] && echo "  ✓ $tool $first_ver — $all_srcs"
+      ;;
+  esac
 done <<'TOOLS'
 ruby|.ruby-version|RUBY_VERSION
 node|.node-version|NODE_VERSION
@@ -196,26 +224,26 @@ echo "Service image tags:"
 FILES=""
 nfiles=0
 for f in docker-compose.yml docker-compose.yaml compose.yml compose.yaml \
-	config/deploy.yml config/deploy.yaml \
-	.devcontainer/compose.yml .devcontainer/compose.yaml \
-	.devcontainer/docker-compose.yml .devcontainer/docker-compose.yaml \
-	.github/workflows/*.yml .github/workflows/*.yaml; do
-	if [ -f "$f" ]; then
-		FILES="$FILES$f
+  config/deploy.yml config/deploy.yaml \
+  .devcontainer/compose.yml .devcontainer/compose.yaml \
+  .devcontainer/docker-compose.yml .devcontainer/docker-compose.yaml \
+  .github/workflows/*.yml .github/workflows/*.yaml; do
+  if [ -f "$f" ]; then
+    FILES="$FILES$f
 "
-		nfiles=$((nfiles + 1))
-	fi
+    nfiles=$((nfiles + 1))
+  fi
 done
 
 if [ "$nfiles" -eq 0 ]; then
-	skip "no compose / deploy / workflow files, nothing to cross-check"
+  skip "no compose / deploy / workflow files, nothing to cross-check"
 else
-	# `image: mysql:8.4`, `image: "mysql:8.4"`, `image: mysql:8.4@sha256:…` (CI pins by digest, so
-	# match only the tag). Commented-out and templated (${…}, {{…}}, <%…%>) images are skipped, as
-	# are untagged ones (a bare `image: acme/app` pins nothing).
-	printf '%s' "$FILES" | while IFS= read -r f; do
-		[ -n "$f" ] || continue
-		awk -v f="$f" '
+  # `image: mysql:8.4`, `image: "mysql:8.4"`, `image: mysql:8.4@sha256:…` (CI pins by digest, so
+  # match only the tag). Commented-out and templated (${…}, {{…}}, <%…%>) images are skipped, as
+  # are untagged ones (a bare `image: acme/app` pins nothing).
+  printf '%s' "$FILES" | while IFS= read -r f; do
+    [ -n "$f" ] || continue
+    awk -v f="$f" '
       {
         line = $0
         sub(/#.*/, "", line)
@@ -235,11 +263,11 @@ else
         print repo "\t" tag "\t" f
       }
     ' "$f"
-	done | sort -u >"$TMP"
+  done | sort -u >"$TMP"
 
-	if [ ! -s "$TMP" ]; then
-		skip "no tagged \`image:\` pins in the $nfiles compose/deploy/workflow file(s) present"
-	elif ! awk -F'\t' '
+  if [ ! -s "$TMP" ]; then
+    skip "no tagged \`image:\` pins in the $nfiles compose/deploy/workflow file(s) present"
+  elif ! awk -F'\t' '
     {
       if (!($1 in seen)) { seen[$1] = 1; order[++nk] = $1 }
       fkey = $1 SUBSEP $3
@@ -267,8 +295,8 @@ else
       exit bad
     }
   ' "$TMP"; then
-		fail=1
-	fi
+    fail=1
+  fi
 fi
 
 [ "$fail" -eq 0 ] || echo "Version pins disagree — fix the file(s) named above."
