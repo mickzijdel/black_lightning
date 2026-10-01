@@ -22,6 +22,7 @@ paths = [
   '''^\.env''',                        # dotenv — gitignored
   '''^log/''', '''^tmp/''',            # Rails runtime artifacts
   '''^\.venv/''',                      # Python (shell/py stacks)
+  '''(^|/)__pycache__/''', '''(^|/)\.pytest_cache/''',  # Python bytecode / pytest state at any depth
   '''^node_modules/''', '''^vendor/''', '''^\.pnpm-store/''',
   '''^config/credentials/.*\.key$''',  # Rails master keys (the *.yml.enc blobs stay scanned)
   '''^config/secrets\.yml$''',         # gitignored local Rails secrets (legacy secrets.yml — never committed)
