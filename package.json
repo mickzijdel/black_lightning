@@ -12,7 +12,7 @@
     "@milkdown/plugin-upload": "^7.22.1",
     "@milkdown/preset-commonmark": "^7.22.1",
     "@milkdown/preset-gfm": "^7.22.1",
-    "@milkdown/prose": "7.22.1",
+    "@milkdown/prose": "7.22.2",
     "@milkdown/utils": "^7.22.1",
     "@popperjs/core": "^2.11.8",
     "@rails/activestorage": "^8.1.301",
